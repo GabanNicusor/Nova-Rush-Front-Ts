@@ -46,7 +46,6 @@ const LoginScreen: React.FC = () => {
 
         if (user_id) {
           const routeList = await getUserAddressList(user_id);
-          console.log("routeList", routeList);
           dispatch(setRouteList(routeList));
           dispatch(setAddressListId(routeList[0].id));
 

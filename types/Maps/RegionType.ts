@@ -1,6 +1,8 @@
 interface regionItem {
-  latitude: number; // The center latitude of the map
-  longitude: number; // The center longitude of the map
+  latitude: number;
+  longitudeDelta: number;
+  longitude: number;
+  latitudeDelta: number;
 }
 
 export type RegionItem = regionItem

@@ -3,8 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    StyleProp,
-    ViewStyle,
     TextStyle,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
@@ -52,7 +50,7 @@ const ExpressTimeCard: React.FC<ExpressTimeCardProps> = ({
         const type = item.expressType;
         // 2. Direct mapping: If it exists in our map (including STANDARD), return it
         if (type !== undefined && type in typeToTimeMap) {
-            return typeToTimeMap[type];
+            return typeToTimeMap[type] as ExpressTimeValue;
         }
         // 3. Fallback specifically to 0 (STANDARD) if data is missing or invalid
         return 1;
@@ -73,15 +71,15 @@ const ExpressTimeCard: React.FC<ExpressTimeCardProps> = ({
     };
 
     return (
-        <View style={styles.container as StyleProp<ViewStyle>}>
-            <Text style={styles.label as StyleProp<TextStyle>}>Express</Text>
-            <View style={styles.pickerWrapper as StyleProp<ViewStyle>}>
-                <View style={styles.pickerClipper as StyleProp<ViewStyle>}>
+        <View style={styles.container}>
+            <Text style={styles.label}>Express</Text>
+            <View style={styles.pickerWrapper}>
+                <View style={styles.pickerClipper}>
                     <Picker
                         selectedValue={selected}
                         onValueChange={handleChange}
-                        style={styles.picker as StyleProp<ViewStyle>}
-                        itemStyle={[styles.item, {color: colorMap[selected]}] as StyleProp<TextStyle>}
+                        style={styles.picker}
+                        itemStyle={[styles.item, {color: colorMap[selected]}]}
                     >
                         {times.map((time) => (
                             <Picker.Item
@@ -109,30 +107,30 @@ const styles = StyleSheet.create({
         height: 80,
         alignItems: 'center',
         flexDirection: 'row',
-    } as ViewStyle,
+    },
     label: {
         fontSize: 22,
         marginRight: 16,
         fontWeight: '600',
-    } as TextStyle,
+    },
     pickerWrapper: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    } as ViewStyle,
+    },
     pickerClipper: {
         height: 40,
         overflow: 'hidden',
         justifyContent: 'center',
-    } as ViewStyle,
+    } ,
     picker: {
         height: 120,
         width: 200,
         justifyContent: 'center',
-    } as ViewStyle,
+    },
     item: {
         fontSize: 30,
-    } as TextStyle,
+    },
 });
 
 export default ExpressTimeCard;

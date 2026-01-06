@@ -3,8 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  StyleProp,
-  ViewStyle,
   TextStyle,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -45,12 +43,12 @@ const PackageSelectorCard: React.FC<PackageSelectorCardProps> = ({
   };
 
   return (
-    <View style={styles.container as StyleProp<ViewStyle>}>
-      <Text style={styles.label as StyleProp<TextStyle>}>Packages</Text>
+    <View style={styles.container}>
+      <Text style={styles.label}>Packages</Text>
       {/* The icon is positioned absolutely/relative to the parent container */}
       <Fontisto name="shopping-package" size={24} color="#007AFF" style={styles.icon} />
 
-      <View style={styles.textContainer as StyleProp<ViewStyle>}>
+      <View style={styles.textContainer}>
         <Picker
           selectedValue={packages}
           onValueChange={value => handleChange(value)}
@@ -83,28 +81,28 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     marginVertical: 12,
-  } as ViewStyle,
+  },
   icon: {
     marginRight: 16,
     left: 100,
-  } as TextStyle, // Icons often use TextStyle for style props in RN
+  }, // Icons often use TextStyle for style props in RN
   textContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  } as ViewStyle,
+  },
   label: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
-  } as TextStyle,
+  },
   pickerTextStyle: {
     justifyContent: 'center',
     height: 40,
     width: 110,
     overflow: 'hidden',
-  } as ViewStyle,
+  },
   pickerItem: {
     fontSize: 16,
-  } as TextStyle,
+  },
 });

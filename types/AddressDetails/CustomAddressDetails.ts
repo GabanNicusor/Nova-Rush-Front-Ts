@@ -22,4 +22,5 @@ export interface customAddressDetailsItem
   selectedVote: ReviewType;
 }
 
+
 export type CustomAddressDetailsItem = customAddressDetailsItem;

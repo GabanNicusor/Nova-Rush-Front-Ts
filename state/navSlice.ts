@@ -40,7 +40,7 @@ interface NavState {
     // UI/Control Variables
     bottomSheetIndex: number;
     addressDetailsIndexSelected: number;
-    mapHeading: RegionItem[]; // Use a specific Heading interface
+    mapHeading: RegionItem; // Use a specific Heading interface
     isAddressPressesForDetails: boolean;
     isNavigatePressed: boolean;
     codeExpirationTimestamp: number;
@@ -75,7 +75,12 @@ const initialState: NavState = {
     addressListOrder: [],
     bottomSheetIndex: 1,
     addressDetailsIndexSelected: 0,
-    mapHeading: [],
+    mapHeading: {
+        latitude: 0.50,
+        latitudeDelta: 0.50,
+        longitude: 0.50,
+        longitudeDelta: 0.05,
+    },
     addressDetailsList: [],
     isAddressPressesForDetails: false,
     isNavigatePressed: false,
@@ -122,7 +127,7 @@ export const navSlice = createSlice({
         setAddressListOrder: (state, action: PayloadAction<StopOrderItem[] | undefined>) => {
             state.addressListOrder = action.payload ?? [];
         },
-        setMapHeading: (state, action: PayloadAction<RegionItem[]>) => {
+        setMapHeading: (state, action: PayloadAction<RegionItem>) => {
             // Use specific type
             state.mapHeading = action.payload;
         },

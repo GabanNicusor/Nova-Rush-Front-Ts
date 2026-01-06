@@ -35,6 +35,7 @@ import {
     setBottomSheetIndex,
     setAddressListOrder,
     setAddressDetailsList,
+    setDestination
 } from '../../state/navSlice';
 import {useAppDispatch, useAppSelector} from '../../state/store';
 
@@ -155,7 +156,7 @@ export const AddressSearchBottomSheet: React.FC = () => {
         );
 
         dispatch(setAddressList(addresses));
-
+        dispatch(setDestination({longitude: item.longitude, latitude: item.latitude}));
         const newOrder = await getStopOrder(listId);
         dispatch(setAddressListOrder(newOrder ?? []));
 

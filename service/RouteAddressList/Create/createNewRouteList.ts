@@ -15,10 +15,6 @@ interface NewListPayload {
   createdAt: string;
 }
 
-interface CreateListResponse {
-  success: boolean;
-  message: string;
-}
 
 interface RouteListItem {
   id: string;
@@ -30,7 +26,7 @@ const createNewRouteList = async (
   listName: string, // Explicitly type the list name string
   chosenDate: string, // Explicitly type the date string
   dispatch: AppDispatch, // Explicitly type the Redux dispatch function
-): Promise<CreateListResponse> => {
+):Promise<any> => {
   // Returns a promise resolving to the API response object
 
   // Get user ID
@@ -67,7 +63,6 @@ const createNewRouteList = async (
     // 4. Dispatch the updated route list to Redux
     dispatch(setRouteList(routeList));
     // 5. Return the parsed response from the creation endpoint
-    console.log("Create New List",await response.data);
     return  await response.json();
 
   } catch (error) {

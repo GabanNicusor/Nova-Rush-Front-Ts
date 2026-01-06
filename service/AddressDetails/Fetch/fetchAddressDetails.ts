@@ -69,6 +69,7 @@ const fetchAddressDetails = async (
             if (addressDetail != null) {
                 // Case 1: Detail exists. Merge all records.
                 // The merged object is implicitly cast to AddressDetailsItem
+                // @ts-ignore
                 addressDetailsList.push({
                     selectedVote: ReviewType.safe_place_to_deliver,
                     ...addressDetail,
@@ -92,6 +93,7 @@ const fetchAddressDetails = async (
                 };
 
                 // Push local default object merged with other data
+                // @ts-ignore
                 addressDetailsList.push({
                     selectedVote: ReviewType.safe_place_to_deliver,
                     ...defaultAddressDetails,

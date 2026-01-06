@@ -142,9 +142,9 @@ const AddressDetailsPagerBottomSheet: React.FC<PagerProps> = ({
     dispatch(setAddressDetailsList(refreshed));
   };
 
-  const handleOrderType = async (address_id: string, user_id: string, list_id: string, type: OrderType) => {
-    type = displayToEnum[type];
-    await updateOrderType(user_id, address_id, list_id, type);
+  const handleOrderType = async (address_id: string, user_id: string, list_id: string, type: OrderTypeDisplay) => {
+    const typeSelected = displayToEnum[type];
+    await updateOrderType(user_id, address_id, list_id, typeSelected);
     const refreshed = await fetchAddressDetails(addressList, user_id, list_id);
     dispatch(setAddressDetailsList(refreshed));
   };
@@ -175,7 +175,7 @@ const AddressDetailsPagerBottomSheet: React.FC<PagerProps> = ({
               setNotes={(text: string) => handleChange(item.address_id, 'notes', text, item.user_id, currentData)}
               handleVote={(vote: ReviewType) => handleVote(item.address_id, vote)}
               setSelectedExpress={(time: number) => handleExpressTime(item.address_id, item.user_id, item.address_list_id, time)}
-              setSelectedOrderType={(type: OrderType) => handleOrderType(item.address_id, item.user_id, item.address_list_id, type)}
+              setSelectedOrderType={(type: OrderTypeDisplay) => handleOrderType(item.address_id, item.user_id, item.address_list_id, type)}
               setPackages={(count: number) => updatePackagesField(item.user_id, item.address_id, item.address_list_id, count)}
           />
         </View>

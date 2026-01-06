@@ -69,7 +69,7 @@ const EmailVerificationScreen: React.FC<EmailVerificationProps> = ({route}) => {
     const handleVerification = async (): Promise<void> => {
         try {
             const response = await sendCodeVerification(code.trim(), email);
-            if (response.status === 200) {
+            if (response != undefined && response.status === 200) {
                 dispatch(clearCodeExpiration()); // Clean up on success
                 navigation.navigate('LoginScreen');
             }

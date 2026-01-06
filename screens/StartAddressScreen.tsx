@@ -93,7 +93,6 @@ const StartAddressScreen: React.FC = () => {
           selectedAddress.longitude ??
           (selectedAddress.coordinates ? selectedAddress.coordinates[1] : 0);
 
-        console.log("fullAddress" +  fullAddress)
         const res = await addNewAddress(fullAddress, lat, lon);
         const newAddressId = await getAddressStartIdByAddress(fullAddress);
 
@@ -102,7 +101,6 @@ const StartAddressScreen: React.FC = () => {
           if (res) success = true;
         }
       }
-      console.log(success);
       if (success) {
         navigation.navigate('MainApp');
       }

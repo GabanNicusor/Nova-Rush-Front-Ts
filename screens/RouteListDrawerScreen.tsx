@@ -89,6 +89,7 @@ const RouteListDrawerScreen: React.FC = () => {
         dispatch,
       );
       if (response) {
+
         dispatch(setAddressList(await getAddressesByListId(response.id)));
         dispatch(setAddressListId(response.id))
         navigation.navigate('MainApp');

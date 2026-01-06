@@ -88,13 +88,14 @@ const AddressItem: React.FC<InnerAddressItemProps> = ({
     <View style={styles.cardContainer}>
         <AddressNameCard address={address}/>
 
-        {/* Use the properties picked in your interface */}
         <ExpressTimeCard
+            // @ts-ignore
             item={{expressType: item.expressType}}
             setSelectedExpress={setSelectedExpress}
         />
 
         <PickupOrDeliverySelectorCard
+            // @ts-ignore
             item={{orderType: item.orderType}}
             setSelectedOrderType={setSelectedOrderType}
         />

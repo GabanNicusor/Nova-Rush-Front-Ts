@@ -59,7 +59,6 @@ const UpdateOrCreateStopDetails = async (
     // Check if the response was successful (HTTP status 200-299)
     if (response.ok) {
       // Return the parsed JSON response, cast to the expected type
-
       return await response.json();
     }
 

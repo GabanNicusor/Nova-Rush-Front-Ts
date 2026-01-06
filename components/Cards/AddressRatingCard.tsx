@@ -23,8 +23,6 @@ interface AddressRatingCardProps {
   // 2. Fix TS2741: Use your CustomAddressDetailsItem type directly.
   // We add 'selectedVote' as optional (?) so it doesn't complain if it's missing from the DB.
   item: CustomAddressDetailsItem & { selectedVote?: ReviewType | null };
-
-  dispatch: AppDispatch;
   addressListId: string;
 }
 
