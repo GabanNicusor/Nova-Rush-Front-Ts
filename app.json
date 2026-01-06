@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Allowing location access allows us to find local events near you.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allowing location access allows us to find local events near you."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -38,7 +42,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,
