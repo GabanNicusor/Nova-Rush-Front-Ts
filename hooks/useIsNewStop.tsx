@@ -12,4 +12,4 @@ export function useIsNewStop(addressId: AddressId): boolean {
     return !!stops?.find(
         stop => stop.address_id === addressId && stop.new_stop,
     );
-};
+}

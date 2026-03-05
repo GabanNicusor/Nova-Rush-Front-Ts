@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo} from 'react';
 import {Dimensions, FlatList, ListRenderItemInfo, ScrollView, StyleSheet, View} from 'react-native';
 
 import {ExpressType} from '@/types/enums/ExpressType';

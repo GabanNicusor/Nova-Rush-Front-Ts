@@ -10,11 +10,6 @@ interface VotePayload {
     user_id: string;
 }
 
-interface VoteUpdateResponse {
-    success: boolean;
-    message: string;
-}
-
 export default async function updateSelectedVote(
     addressId: string,
     selectedVote: ReviewType,
