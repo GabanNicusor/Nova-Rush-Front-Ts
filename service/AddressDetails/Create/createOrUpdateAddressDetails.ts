@@ -26,7 +26,7 @@ export default async function createOrUpdateAddressDetails(
     };
 
     try {
-        const response = await fetch(
+        await fetch(
             `${API_BASE_URL}/api/v1/address-details/createOrUpdateAddressDetails`,
             {
                 method: 'POST',
@@ -35,12 +35,6 @@ export default async function createOrUpdateAddressDetails(
             },
         );
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(
-                `API request failed with status ${response.status}: ${errorBody}`,
-            );
-        }
     } catch (error) {
         handleApiError(error);
         throw error;

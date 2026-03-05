@@ -39,8 +39,7 @@ export default function useFetchOptimizeStatus(listId: string | ''): OptimizeSta
             }
         };
 
-        fetchStatus().then(r => {
-        });
+        fetchStatus().then();
 
         return () => {
             isMounted = false;

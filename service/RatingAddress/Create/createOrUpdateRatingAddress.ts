@@ -22,7 +22,7 @@ export default async function createOrUpdateRatingAddress(
     };
 
     try {
-        const response = await fetch(
+        await fetch(
             `${API_BASE_URL}/api/v1/rating/address/createOrUpdateRatingAddress`,
             {
                 method: 'POST',
@@ -31,12 +31,6 @@ export default async function createOrUpdateRatingAddress(
             },
         );
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(
-                `API request failed with status ${response.status}: ${errorBody}`,
-            );
-        }
     } catch (error) {
         handleApiError(error);
         throw error;

@@ -30,7 +30,7 @@ export default async function updateSelectedVote(
     try {
         const url = `${API_BASE_URL}/api/v1/address-details/updateSelectedVote`;
 
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,12 +38,7 @@ export default async function updateSelectedVote(
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-            const errorBody: VoteUpdateResponse = await response.json();
-            throw new Error(
-                errorBody.message || `Request failed with status ${response.status}`,
-            );
-        }
+
     } catch (error) {
         handleApiError(error);
         throw error;

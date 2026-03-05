@@ -40,4 +40,4 @@ export function handleApiError(error: unknown): void {
 
     showError(userMessage);
     throw error;
-};
+}

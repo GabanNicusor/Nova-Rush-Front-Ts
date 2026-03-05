@@ -43,7 +43,6 @@ export default async function  fetchSuggestionsFromORS (
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`ORS API Error (Status ${response.status}):`, errorText);
-            throw new Error(`ORS API failed with status ${response.status}`);
         }
 
         const data: ORSResponse = await response.json();

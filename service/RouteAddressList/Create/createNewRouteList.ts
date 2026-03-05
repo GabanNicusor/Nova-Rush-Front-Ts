@@ -43,14 +43,6 @@ export default async function createNewRouteList(
             },
         );
 
-        if (!response.ok) {
-            // Throw an error if the server responded with a non-2xx status
-            const errorBody = await response.text();
-            throw new Error(
-                `Failed to create list: ${response.status} - ${errorBody}`,
-            );
-        }
-
         // 3. Fetch updated route list after creation
         const routeList: RouteListItem[] = await fetchUserAddressList();
         // 4. Dispatch the updated route list to Redux

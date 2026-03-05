@@ -27,7 +27,7 @@ export async function  createOrUpdateRoutePath (
     };
 
     try {
-        const response = await fetch(
+         await fetch(
             `${API_BASE_URL}/api/v1/route-path/saveRoutePath`,
             {
                 method: 'POST',
@@ -36,16 +36,9 @@ export async function  createOrUpdateRoutePath (
             },
         );
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(
-                `API request failed with status ${response.status}: ${errorBody}`,
-            );
-        }
-
     } catch (error) {
         handleApiError(error);
         throw error;
     }
-};
+}
 

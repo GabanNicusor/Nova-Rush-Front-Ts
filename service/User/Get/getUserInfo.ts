@@ -17,12 +17,6 @@ export default async function getUserInfo(): Promise<UserProfile> {
     try {
         const token: string | null = await AsyncStorage.getItem('username');
 
-        if (!token) {
-            throw new Error(
-                'Authentication token (username) not found in AsyncStorage.',
-            );
-        }
-
         const response: AxiosResponse<UserProfile> = await axios.get(
             `${API_BASE_URL}/api/v1/user/get-profile?username=${token}`,
             {

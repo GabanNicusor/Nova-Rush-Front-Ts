@@ -104,18 +104,8 @@ export  async function  fetchOSRMDirections  (
             `${API_OSM_URL}/route/v1/driving/${coordinatesString}?overview=full&steps=true`,
         );
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(
-                `OSRM API request failed: ${response.status} - ${errorText}`,
-            );
-        }
 
         const data: OSRMResponse = await response.json();
-
-        if (data.code !== 'Ok' || !data.routes || data.routes.length === 0) {
-            throw new Error(`OSRM routing failed: ${data.code}`);
-        }
 
         const encodedGeometry = data.routes[0].geometry;
 

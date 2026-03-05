@@ -236,8 +236,7 @@ export default function MapScreen() {
                         coordinate={{latitude: item.latitude, longitude: item.longitude}}
                         onPress={(e) => {
                             e.stopPropagation();
-                            handleMarkerPress(item.address_id, index - 1).then(r => {
-                            });
+                            handleMarkerPress(item.address_id, index - 1).then();
                         }}
                         anchor={{x: 0.5, y: 1}}
                         tracksViewChanges={selectedMarkerId === item.address_id || isAnimating}

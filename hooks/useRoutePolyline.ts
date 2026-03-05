@@ -66,8 +66,7 @@ export default function useRoutePolyline(address: AddressItemComplete[]) {
             }
         };
 
-        updateRoute().then(r => {
-        });
+        updateRoute().then();
     }, [addressListId, dispatch, lastProcessedIndex, routeCoordinates, userLocation]);
 
     return {routeCoordinates};

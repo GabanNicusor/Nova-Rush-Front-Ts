@@ -54,14 +54,12 @@ export default function useBackgroundGeolocation() {
 
         }).then((state) => {
             if (!state.enabled) {
-                BackgroundGeolocation.start().then(r => {
-                });
+                BackgroundGeolocation.start().then();
             }
         });
 
         return () => {
-            BackgroundGeolocation.removeListeners().then(r => {
-            });
+            BackgroundGeolocation.removeListeners().then();
         };
     }, [dispatch]);
 };
