@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="20bbbaf1-d994-43ef-9dc7-a1f31735e048" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/components/Map/ExpandableMarker.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useLocalEditsWithAutoSave.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useRoutePolyline.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service/Address/Get/getUserAddressStart.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/go.imports.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/go.imports.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Buttons/ButtonOptimizeRoute.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Buttons/ButtonOptimizeRoute.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Buttons/NavigateButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Buttons/NavigateButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Buttons/RecenterButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Buttons/RecenterButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Buttons/RecenterButtonContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Buttons/RecenterButtonContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Buttons/XButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Buttons/XButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/AddressDetailsCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/AddressDetailsCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/AddressNameCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/AddressNameCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/AddressRatingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/AddressRatingCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/ExpressTimeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/ExpressTimeCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/FailedDeliveryCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/FailedDeliveryCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/NavigationCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/NavigationCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/PackageSelectorCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/PackageSelectorCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/PickupOrDeliverySelectorCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/PickupOrDeliverySelectorCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/SuccessDeliveryCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/SuccessDeliveryCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ErrorsBoundary/ErrorBoundary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ErrorsBoundary/ErrorBoundary.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Map/MapAddressModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Map/MapAddressModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Map/RoutePolyline.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Map/RoutePolyline.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Map/SearchedAddressMarker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Map/SearchedAddressMarker.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Map/UserLocationCircle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Map/UserLocationCircle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressDetailsBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressDetailsBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressDetailsPagerBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressDetailsPagerBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressNavigationBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressNavigationBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressSearchBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressSearchBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/DrawerContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/DrawerContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/RenderRouteAddressList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/RenderRouteAddressList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/ArrowIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/ArrowIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/ArrowIndicator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/ArrowIndicator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/DirectionIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/DirectionIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/FailedDeliveryIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/FailedDeliveryIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/NavigationIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/NavigationIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/StaticSvgImage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/StaticSvgImage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SvgImages/SuccessDeliveryIcon.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SvgImages/SuccessDeliveryIcon.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/external-link.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/haptic-tab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/hello-wave.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/parallax-scroll-view.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/themed-text.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/themed-view.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/collapsible.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/icon-symbol.ios.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/icon-symbol.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/theme.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/use-color-scheme.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/use-color-scheme.web.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/use-theme-color.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useCountDownTimer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useCountDownTimer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useFetchOptimizeStatus.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useFetchOptimizeStatus.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useGeolocationListener.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useBackgroundGeolocation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useIsNewStop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useIsNewStop.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigation/DrawerNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/DrawerNavigator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigation/StackNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/StackNavigator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AddressDetailsScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AddressDetailsScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/EmailVerificationScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/EmailVerificationScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/LoginScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/LoginScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/MapScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/MapScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/RegisterScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/RegisterScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/RouteListDrawerScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/RouteListDrawerScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/StartAddressScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/StartAddressScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Add/addNewAddress.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Add/addNewAddress.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Add/addUserStartAddress.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Add/addUserStartAddress.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Fetch/fetchAddressSuggestion.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Fetch/fetchAddressSuggestion.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Fetch/fetchAddressesForSelectedList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Fetch/fetchAddressesForSelectedList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Fetch/fetchSuggestionFromORS.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Fetch/fetchSuggestionFromORS.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Fetch/findAddressSuggestion.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Fetch/findAddressSuggestion.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Get/getAddressFromCoordinates.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Get/getAddressFromCoordinates.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Get/getAddressStartId.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Get/getAddressStartIdByAddress.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Get/getAddressStartIdByAddress.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/AddressDetails/Create/createOrUpdateAddressDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/AddressDetails/Create/createOrUpdateAddressDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/AddressDetails/Create/updateSelectedVote.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/AddressDetails/Create/updateSelectedVote.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/AddressDetails/Fetch/fetchAddressDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/AddressDetails/Fetch/fetchAddressDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/AddressDetails/Get/getAddressDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/AddressDetails/Get/getAddressDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Auth/sendCodeVerification.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Auth/sendCodeVerification.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Auth/sendNewCodeRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Auth/sendNewCodeRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Auth/sendUserCredentialsToAuthenticate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Auth/sendUserCredentialsToAuthenticate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Auth/sendUserCredentialsToRegister.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Auth/sendUserCredentialsToRegister.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Direction/fetchOSRMDirection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Direction/fetchOSRMDirection.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/LocationService/locationService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Map/Create/createOrUpdateRoutePath.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Map/Create/createOrUpdateRoutePath.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Map/Get/getShorterPolyline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Map/Get/getShorterPolyline.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Map/Get/getShortestRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Map/Get/getShortestRoute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Map/Post/postCalculateAndDisplayRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Map/Post/postCalculateAndDisplayRoute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RatingAddress/Create/createOrUpdateRatingAddress.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RatingAddress/Create/createOrUpdateRatingAddress.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RatingAddress/Get/getRatingAddress.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RatingAddress/Get/getRatingAddress.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Add/addAddressToList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Add/addAddressToList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Create/createNewRouteList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Create/createNewRouteList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Delete/deleteAddressFromList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Delete/deleteAddressFromList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Delete/deleteRouteListByListId.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Delete/deleteRouteListByListId.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Get/getAddressesByListId.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Get/getAddressesByListId.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Get/getIsFirstOptimize.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Get/getIsFirstOptimize.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Get/getUserAddressList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Get/getUserAddressList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Set/setIsOptimizeTrue.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Set/setIsOptimizeTrue.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/Update/updateRouteAddressList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/Update/updateRouteAddressList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/RouteAddressList/handlePlaceSelected.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/RouteAddressList/handlePlaceSelected.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Create/updateExpressField.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Create/updateExpressField.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Create/updateOrCreateStopDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Create/updateOrCreateStopDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Create/updateOrderType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Create/updateOrderType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Create/updatePackagesField.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Create/updatePackagesField.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Delete/deleteAllStopDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Delete/deleteAllStopDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Delete/deleteStopDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Delete/deleteStopDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopDetails/Get/getStopDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopDetails/Get/getStopDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Delete/deleteAddressFromRouteStop.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Delete/deleteAddressFromRouteStop.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Get/getStopOrder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Get/getStopOrder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Update/updateAllNewStops.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Update/updateAllNewStops.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Update/updateNewStop.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Update/updateNewStop.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Update/updatePackagesField.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Update/updatePackagesField.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Update/updateStopOrder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Update/updateStopOrder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/User/Fetch/fetchFirstListId.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/User/Fetch/fetchFirstListId.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/User/Fetch/fetchUserAddressList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/User/Fetch/fetchUserAddressList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/User/Get/getUserEmailTimeStamp.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/User/Get/getUserEmailTimeStamp.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/User/Get/getUserId.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/User/Get/getUserId.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/User/Get/getUserInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/User/Get/getUserInfo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/state/getUsernameFromToken.ts" beforeDir="false" afterPath="$PROJECT_DIR$/state/getUsernameFromToken.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/state/navSlice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/state/navSlice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/state/store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/state/store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/state/storeToken.ts" beforeDir="false" afterPath="$PROJECT_DIR$/state/storeToken.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/AddressDetails/CustomAddressDetails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/AddressDetails/CustomAddressDetails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Map/convertAddressListToRouteStopList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Map/convertAddressListToRouteStopList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Map/convertCurrentAddressesToStopList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Map/convertCurrentAddressesToStopList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Map/createMarkers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Map/createMarkers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Map/getDistanceBetweenTwoAddresses.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Map/getDistanceBetweenTwoAddresses.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/Map/haversineDistanceBetweenTwoCoordinates.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/Map/haversineDistanceBetweenTwoCoordinates.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/User/dispatchFirstListId.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/User/dispatchFirstListId.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/apiErrorHandler.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/utils/apiErrorHandler.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/convertPersentageToNumber.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/utils/convertPersentageToNumber.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/handleRemoveAddress.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/utils/handleRemoveAddress.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="39wR74yS1pLnZZiYfUYep7afwuo" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.TypeScript&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/user/novaRushFrontTs/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="20bbbaf1-d994-43ef-9dc7-a1f31735e048" name="Changes" comment="" />
+      <created>1771604975400</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1771604975400</updated>
+      <workItem from="1771604976446" duration="32913000" />
+      <workItem from="1772120475700" duration="26928000" />
+      <workItem from="1772378397208" duration="12088000" />
+      <workItem from="1772466438594" duration="27410000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
