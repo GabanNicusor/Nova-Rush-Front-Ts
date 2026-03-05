@@ -1,25 +1,20 @@
 import React, {useState} from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    Button,
-    Alert,
-    ViewStyle,
-    TextStyle,
-} from 'react-native';
+import {Alert, Button, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle,} from 'react-native';
 
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-import {setCodeExpirationTimestamp} from "../state/navSlice"
-import {useAppDispatch} from '../state/store';
+import {setCodeExpirationTimestamp} from "@/state/navSlice"
+import {useAppDispatch} from '@/state/store';
 
-// Service
 import sendUserCredentialsToRegister from '../service/Auth/sendUserCredentialsToRegister';
 import getUserEmailTimeStamp from "../service/User/Get/getUserEmailTimeStamp";
 
-// --- Interfaces & Types ---
+interface IStyles {
+    container: ViewStyle;
+    title: TextStyle;
+    input: TextStyle;
+    buttonContainer: ViewStyle;
+}
 
 type RootStackParamList = {
     LoginScreen: undefined;
@@ -27,9 +22,8 @@ type RootStackParamList = {
     RegisterScreen: undefined;
 };
 
-// --- Component ---
 
-const RegisterScreen: React.FC = () => {
+export default function RegisterScreen() {
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -40,7 +34,6 @@ const RegisterScreen: React.FC = () => {
 
     const handleRegister = async (): Promise<void> => {
         try {
-            // Service call to register user
             const response = await sendUserCredentialsToRegister(
                 username,
                 email,
@@ -50,7 +43,6 @@ const RegisterScreen: React.FC = () => {
             if (response) {
                 const code = await getUserEmailTimeStamp(email);
                 dispatch(setCodeExpirationTimestamp(code ?? -1))
-                // Navigate to verification and pass the email parameter
                 navigation.navigate('EmailVerificationScreen', {email});
             } else {
                 Alert.alert(
@@ -111,34 +103,36 @@ const RegisterScreen: React.FC = () => {
     );
 };
 
-// --- Styles ---
-
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyles>({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16,
+
         backgroundColor: '#f2f2f2',
-    } as ViewStyle,
+    },
+
     title: {
-        fontSize: 24,
         marginBottom: 24,
+
+        fontSize: 24,
         fontWeight: 'bold',
-    } as TextStyle,
+    },
+
     input: {
         width: '100%',
         padding: 12,
         marginVertical: 8,
+
+        backgroundColor: '#fff',
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 8,
-        backgroundColor: '#fff',
-    } as TextStyle,
+    },
+
     buttonContainer: {
         width: '100%',
         marginTop: 10,
-    } as ViewStyle,
+    },
 });
-
-export default RegisterScreen;

@@ -1,56 +1,45 @@
-import axios, { AxiosResponse, AxiosError } from 'axios';
-import { handleApiError } from '../../../utils/apiErrorHandler';
-import { AddressItemComplete } from '../../../types/Address/AddressType';
+import axios, {AxiosError, AxiosResponse} from 'axios';
+import {handleApiError} from '@/utils/apiErrorHandler';
+import {AddressItemComplete} from '@/types/Address/AddressType';
+import getUserId from '../../../service/User/Get/getUserId'
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-// --- Type Definitions (Imported or Defined Here) ---
 interface ApiErrorResponse {
-  _embedded?: {
-    errors?: Array<{ message: string }>;
-  };
+    _embedded?: {
+        errors?: { message: string }[];
+    };
 }
-// ---
 
-const getAddressesByListId = async (
-  addressListId: string | null, // Explicitly type the input list ID
-): Promise<AddressItemComplete[]> => {
-  // Returns a promise resolving to an array of AddressItem (or empty array)
+export default async function getAddressesByListId(
+    addressListId: string | null,
+): Promise<AddressItemComplete[]> {
+    try {
+        const userId = await getUserId()
+        const response: AxiosResponse<AddressItemComplete[]> = await axios.get(
+            `${API_BASE_URL}/api/v1/address/address-lists/addresses?addresses_list_id=${addressListId}&user_id=${userId}`,
+            {
+                headers: {'Content-Type': 'application/json'},
+            },
+        );
 
-  try {
-    // Use Generics: <AddressItem[]> tells TypeScript the structure of response.data
-    const response: AxiosResponse<AddressItemComplete[]> = await axios.get(
-      `${API_BASE_URL}/api/v1/address/address-lists/addresses?addresses_list_id=${addressListId}`,
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+        if (response.status === 200) {
+            return response.data;
+        }
 
-    // Axios throws an error for 4xx/5xx, so we only need to check for 200 here
-    if (response.status === 200) {
-      return response.data;
+        return [];
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        const errorData = axiosError.response?.data as ApiErrorResponse | undefined;
+
+        const errorMsg = errorData?._embedded?.errors?.[0]?.message;
+
+        if (errorMsg === 'Route not found.') {
+            return [];
+        } else {
+            handleApiError(error);
+            throw error;
+        }
     }
-
-    // Should be unreachable if the API is configured correctly, but good for safety
-    return [];
-  } catch (error) {
-    const axiosError = error as AxiosError;
-
-    // 2. Safely cast the response data to your defined error structure
-    const errorData = axiosError.response?.data as ApiErrorResponse | undefined;
-
-    // 3. Safely access the nested message using the typed structure
-    const errorMsg = errorData?._embedded?.errors?.[0]?.message;
-
-    if (errorMsg === 'Route not found.') {
-      // If the specific "not found" error is caught, return an empty array
-      return [];
-    } else {
-      // For all other errors (network issues, unexpected server errors)
-      handleApiError(error);
-      throw error;
-    }
-  }
 };
-
-export default getAddressesByListId;

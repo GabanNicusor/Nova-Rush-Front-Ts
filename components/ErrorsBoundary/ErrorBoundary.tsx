@@ -1,21 +1,17 @@
 import React, { ErrorInfo, ReactNode } from 'react';
 import { StyleSheet, Text, TextStyle } from 'react-native';
 
-// --- Type Definitions ---
+interface IStyle {
+  errorText: TextStyle;
+}
 
-// 1. Define the component's state structure
 interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-// 2. Define the component's props
-// children: ReactNode allows any valid React element (or array of elements)
 interface ErrorBoundaryProps {
   children: ReactNode;
-  // Optional: You could add a fallback component prop here if you wanted a more flexible boundary
 }
-
-// ---
 
 class ErrorBoundary extends React.Component<
   ErrorBoundaryProps,
@@ -49,19 +45,15 @@ class ErrorBoundary extends React.Component<
 
   render() {
     if (this.state.hasError) {
-      // Render the fallback UI when an error is caught.
       return <Text style={styles.errorText}>Something went wrong.</Text>;
     }
-
-    // Render children normally if no error was caught.
     return this.props.children;
   }
 }
 
 export default ErrorBoundary;
 
-// Basic styles for the fallback text
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyle>({
   errorText: {
     fontSize: 18,
     color: 'red',

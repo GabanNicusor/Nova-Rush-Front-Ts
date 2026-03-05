@@ -1,57 +1,45 @@
 import React from 'react';
-import {
-  View,
-  Animated,
-  ViewStyle,
-  ImageSourcePropType,
-  GestureResponderEvent,
-} from 'react-native';
-import Svg, { Image } from 'react-native-svg';
+import {Animated, GestureResponderEvent, ImageSourcePropType, StyleSheet, View, ViewStyle,} from 'react-native';
+import Svg, {Image} from 'react-native-svg';
 
-// --- Interfaces ---
-
-interface FailedDeliveryIconProps {
-  /** Callback function triggered when the icon is pressed */
-  onPress?: (event: GestureResponderEvent) => void;
-  /** Optional size prop to make the component reusable */
-  size?: number;
-  /** Optional style for the container View */
-  style?: ViewStyle;
+interface IStyles {
+    container: ViewStyle;
 }
 
-// --- Component ---
+interface FailedDeliveryIconProps {
+    onPress?: (event: GestureResponderEvent) => void;
+    size?: number;
+    style?: ViewStyle;
+}
 
-const FailedDeliveryIcon: React.FC<FailedDeliveryIconProps> = ({
-  onPress,
-  size = 40,
-  style,
-}) => {
-  // Explicitly type the required asset
-  const imageSource: ImageSourcePropType = require('../../assets/images/failed-delivery.png');
 
-  return (
-    <View style={[styles.container, style]}>
-      <Animated.View>
-        <Svg width={size} height={size} onPress={onPress}>
-          <Image
-            href={imageSource}
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMid meet"
-          />
-        </Svg>
-      </Animated.View>
-    </View>
-  );
+export default function FailedDeliveryIcon({
+                                               onPress,
+                                               size = 40,
+                                               style,
+                                           }: FailedDeliveryIconProps) {
+    const imageSource: ImageSourcePropType = require('../../assets/images/failed-delivery.png');
+
+    return (
+        <View style={[styles.container, style]}>
+            <Animated.View>
+                <Svg width={size} height={size} onPress={onPress}>
+                    <Image
+                        href={imageSource}
+                        width="100%"
+                        height="100%"
+                        preserveAspectRatio="xMidYMid meet"
+                    />
+                </Svg>
+            </Animated.View>
+        </View>
+    );
 };
 
-// --- Styles ---
+const styles = StyleSheet.create<IStyles>({
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+});
 
-const styles = {
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  } as ViewStyle,
-};
-
-export default FailedDeliveryIcon;

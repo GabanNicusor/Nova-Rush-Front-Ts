@@ -1,45 +1,40 @@
-import React, {useMemo, useState, useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 
-import DraggableFlatList, {
-    RenderItemParams,
-} from 'react-native-draggable-flatlist';
+import DraggableFlatList, {RenderItemParams,} from 'react-native-draggable-flatlist';
 
 import {FontAwesome} from '@react-native-vector-icons/fontawesome';
 
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    TextInput,
-    Keyboard,
-    TouchableWithoutFeedback,
-    Modal,
     Alert,
-    ViewStyle,
+    Keyboard,
+    Modal,
+    StyleSheet,
+    Text,
+    TextInput,
     TextStyle,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+    ViewStyle,
 } from 'react-native';
 
-// External
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 
-// Redux
 import {
-    selectAddressListId,
     selectAddressList,
-    selectPolylineCoordsList,
-    selectRouteList,
+    selectAddressListId,
     selectAddressListOrder,
     selectBottomSheetIndex,
-    setAddressList,
-    setBottomSheetIndex,
-    setAddressListOrder,
+    selectPolylineCoordsList,
+    selectRouteList, selectUserStartAddress,
     setAddressDetailsList,
+    setAddressList,
+    setAddressListOrder,
+    setBottomSheetIndex,
     setDestination
-} from '../../state/navSlice';
-import {useAppDispatch, useAppSelector} from '../../state/store';
+} from '@/state/navSlice';
+import {useAppDispatch, useAppSelector} from '@/state/store';
 
-// Services & Types
 import handlePlaceSelected from '../../service/RouteAddressList/handlePlaceSelected';
 import findAddressSuggestion from '../../service/Address/Fetch/findAddressSuggestion';
 import getShortestRoute from '../../service/Map/Get/getShortestRoute';
@@ -49,38 +44,48 @@ import updateNewStop from '../../service/StopOrder/Update/updateNewStop';
 import getStopOrder from '../../service/StopOrder/Get/getStopOrder';
 import updateAllNewStops from '../../service/StopOrder/Update/updateAllNewStops';
 import fetchAddressDetails from '../../service/AddressDetails/Fetch/fetchAddressDetails';
-import fetchAddressesForSelectedList from '../../service/Address/Fetch/fetchAddressesForSelectedList';
 
-// Hooks
 import useCountDownTimer from '../../hooks/useCountDownTimer';
 
-// Components
 import ButtonOptimizeRoute from '../Buttons/ButtonOptimizeRoute';
 import RenderRouteAddressList from './RenderRouteAddressList';
-import {AddressItemComplete} from '../../types/Address/AddressType';
+import {AddressItemComplete} from '@/types/Address/AddressType';
 
-// --- Interfaces ---
+interface IStyles {
+    container: ViewStyle;
+    flexOne: ViewStyle;
+    searchContainer: ViewStyle;
+    searchInput: TextStyle;
+    menuButton: ViewStyle;
+    suggestionsContainer: ViewStyle;
+    suggestionItem: ViewStyle;
+    emptyContainerFull: ViewStyle;
+    emptyContainer: ViewStyle;
+    emptyText: TextStyle;
+    listContainer: ViewStyle;
+    flatListContent: ViewStyle;
+    modalOverlay: ViewStyle;
+    optionsContainer: ViewStyle;
+}
 
 interface AddressSuggestion {
     id: string;
     latitude?: number;
     longitude?: number;
-    coordinates?: [number, number]; // [lon, lat]
+    coordinates?: [number, number];
     address_complete?: string;
     address?: string;
 }
 
-// --- Component ---
-
-export const AddressSearchBottomSheet: React.FC = () => {
+export function AddressSearchBottomSheet() {
     const dispatch = useAppDispatch();
 
-    // Selectors with RootState typing
     const addressListId = useAppSelector(selectAddressListId);
+    const startItem = useAppSelector(selectUserStartAddress);
     const oldOrderedList = useAppSelector(selectAddressListOrder);
     const addressList = useAppSelector(selectAddressList);
     const routeList = useAppSelector(selectRouteList);
-    const allCoords = useAppSelector(selectPolylineCoordsList);
+    const allCords = useAppSelector(selectPolylineCoordsList);
     const bottomSheetIndex = useAppSelector(selectBottomSheetIndex);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -98,18 +103,7 @@ export const AddressSearchBottomSheet: React.FC = () => {
     const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(false);
 
     const {timeLeft, startTimer} = useCountDownTimer(10);
-    const [addressListLocal, setAddressListLocal] =
-        useState<AddressItemComplete[]>(addressList);
 
-    useEffect(() => {
-        if (bottomSheetRef.current) {
-            bottomSheetRef.current.snapToIndex(safeIndex);
-        }
-    }, [bottomSheetIndex, safeIndex]);
-
-    useEffect(() => {
-        setAddressListLocal(addressList);
-    }, [addressList]);
 
     const handleInputChange = async (text: string) => {
         setQuery(text);
@@ -123,12 +117,6 @@ export const AddressSearchBottomSheet: React.FC = () => {
         }
     };
 
-    const safeAddressList = useMemo(
-        () => addressListLocal.filter(item => item?.id),
-        [addressListLocal]
-    );
-
-
     const handlePlaceSelectedAction = async (item: AddressSuggestion) => {
         if (routeList.length === 0) {
             Alert.alert('In order to add Addresses please create a Route');
@@ -137,7 +125,7 @@ export const AddressSearchBottomSheet: React.FC = () => {
 
         const userId = await getUserId();
 
-        const { listId, addresses } = await handlePlaceSelected(
+        const {listId, addresses} = await handlePlaceSelected(
             {
                 latitude: item.latitude ?? item.coordinates?.[1] ?? 0,
                 longitude: item.longitude ?? item.coordinates?.[0] ?? 0,
@@ -148,7 +136,7 @@ export const AddressSearchBottomSheet: React.FC = () => {
 
         await updateStopOrder(
             oldOrderedList,
-            allCoords,
+            allCords,
             userId,
             listId,
             addresses,
@@ -156,7 +144,7 @@ export const AddressSearchBottomSheet: React.FC = () => {
         );
 
         dispatch(setAddressList(addresses));
-        dispatch(setDestination({longitude: item.longitude, latitude: item.latitude}));
+        dispatch(setDestination({latitude: item.latitude ?? 0.50, longitude: item.longitude ?? 0.50}));
         const newOrder = await getStopOrder(listId);
         dispatch(setAddressListOrder(newOrder ?? []));
 
@@ -181,7 +169,7 @@ export const AddressSearchBottomSheet: React.FC = () => {
                 await getShortestRoute(addressListId, dispatch);
                 await updateStopOrder(
                     oldOrderedList,
-                    allCoords,
+                    allCords,
                     user_id,
                     addressListId,
                     addressList,
@@ -201,14 +189,24 @@ export const AddressSearchBottomSheet: React.FC = () => {
                             drag,
                             isActive,
                             getIndex,
-                        }: RenderItemParams<AddressItemComplete>) => (
-        <RenderRouteAddressList
-            item={item}
-            index={getIndex() ?? 0}
-            drag={drag}
-            isActive={isActive}
-        />
-    );
+                        }: RenderItemParams<AddressItemComplete>) => {
+        const listIndex = (getIndex() ?? 0) + 1;
+
+        return (
+            <RenderRouteAddressList
+                item={item}
+                index={listIndex}
+                drag={drag}
+                isActive={isActive}
+            />
+        );
+    };
+
+    useEffect(() => {
+        if (bottomSheetRef.current) {
+            bottomSheetRef.current.snapToIndex(safeIndex);
+        }
+    }, [bottomSheetIndex, safeIndex]);
 
     return (
         <BottomSheet
@@ -255,36 +253,52 @@ export const AddressSearchBottomSheet: React.FC = () => {
                         )}
 
                         <View style={styles.listContainer}>
-                            {safeAddressList.length === 0 ? (
+                            {addressList.length === 0 ? (
                                 <View style={styles.emptyContainerFull}>
                                     <Text style={styles.emptyText}>No addresses added yet.</Text>
                                 </View>
                             ) : (
                                 <DraggableFlatList
-                                    data={safeAddressList}
-                                    renderItem={renderItem}
+                                    data={addressList}
                                     keyExtractor={(item) => item.id}
+                                    renderItem={renderItem}
+
+                                    // This renders the first address at the top, but makes it "untouchable" by drag logic
+                                    ListHeaderComponent={() => (
+                                        startItem ? (
+                                            <RenderRouteAddressList
+                                                item={startItem}
+                                                index={0}
+                                                drag={undefined}
+                                                isActive={false}
+                                            />
+                                        ) : null
+                                    )}
+
                                     onDragEnd={async ({data, to}) => {
+                                        if(startItem == null) return;
+
+                                        const updatedFullList = [startItem, ...data];
+
                                         try {
                                             const user_id = await getUserId();
                                             if (addressListId) {
                                                 await updateStopOrder(
                                                     oldOrderedList,
-                                                    allCoords,
+                                                    allCords,
                                                     user_id,
                                                     addressListId,
-                                                    data,
+                                                    updatedFullList,
                                                     dispatch,
                                                 );
+
                                                 await updateNewStop(addressListId, data[to].id);
-                                                const details = await fetchAddressDetails(
-                                                    data,
-                                                    user_id,
-                                                    addressListId,
-                                                );
+
+                                                const details = await fetchAddressDetails(updatedFullList, user_id, addressListId);
 
                                                 dispatch(setAddressDetailsList(details));
-                                                dispatch(setAddressList(data));
+                                                dispatch(setAddressList(updatedFullList));
+
                                                 const newOrder = await getStopOrder(addressListId);
                                                 dispatch(setAddressListOrder(newOrder ?? []));
                                             }
@@ -292,7 +306,8 @@ export const AddressSearchBottomSheet: React.FC = () => {
                                             console.error('UpdateStopOrder error:', err);
                                         }
                                     }}
-                                    contentContainerStyle={styles.flatListContent}
+                                    containerStyle={{flex: 1}}
+                                    contentContainerStyle={{paddingBottom: 150}}
                                 />
                             )}
                         </View>
@@ -333,79 +348,106 @@ export const AddressSearchBottomSheet: React.FC = () => {
             </Modal>
         </BottomSheet>
     );
-};
+}
 
-const styles = StyleSheet.create({
-    container: {flex: 1, padding: 20},
-    flexOne: {flex: 1},
+const styles = StyleSheet.create<IStyles>({
+    container: {
+        flex: 1,
+        padding: 20,
+    },
+
+    flexOne: {
+        flex: 1,
+    },
+
     searchContainer: {
-        marginBottom: 12,
-        paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
-    } as ViewStyle,
+        marginBottom: 12,
+        paddingHorizontal: 10,
+    },
+
     searchInput: {
         flex: 1,
-        borderBottomWidth: 1,
         padding: 8,
-    } as TextStyle,
+
+        borderBottomWidth: 1,
+    },
+
     menuButton: {
         marginLeft: 10,
         padding: 10,
+
         borderRadius: 9,
         borderWidth: 2,
-    } as ViewStyle,
+    },
+
     suggestionsContainer: {
         flexDirection: 'column',
         width: '100%',
-    } as ViewStyle,
+    },
+
     suggestionItem: {
         padding: 15,
+        marginHorizontal: 18,
+        marginVertical: 4,
+
         borderRadius: 15,
         borderWidth: 1,
-        marginHorizontal: 18,
         borderColor: 'black',
         backgroundColor: '#f9f9f9',
-        marginVertical: 4,
+
         elevation: 3,
-    } as ViewStyle,
+    },
+
     emptyContainerFull: {
         flex: 1,
-        justifyContent: 'flex-start',
         minHeight: 500,
         paddingTop: 50,
-    } as ViewStyle,
+        justifyContent: 'flex-start',
+    },
+
     emptyContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    } as ViewStyle,
+    },
+
     emptyText: {
+        textAlign: 'center',
+
         fontSize: 18,
         color: 'black',
-        textAlign: 'center',
-    } as TextStyle,
+    },
+
     listContainer: {
         flex: 1,
+        minHeight: 500,
         paddingTop: 10,
-    } as ViewStyle,
+    },
+
     flatListContent: {
         paddingBottom: 100,
-    } as ViewStyle,
+    },
+
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
-    } as ViewStyle,
+
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+
     optionsContainer: {
-        backgroundColor: 'white',
         width: 200,
         height: 100,
         padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-        elevation: 5,
         justifyContent: 'center',
-    } as ViewStyle,
+        alignItems: 'center',
+
+        backgroundColor: 'white',
+        borderRadius: 10,
+
+        elevation: 5,
+    },
 });

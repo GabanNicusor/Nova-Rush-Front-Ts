@@ -1,34 +1,55 @@
 import React from 'react';
-import { Circle, LatLng } from 'react-native-maps'; // LatLng is the standard type for coordinates in react-native-maps
+import {LatLng, Marker} from 'react-native-maps';
+import {StyleSheet, View} from 'react-native';
 
-// --- Type Definitions ---
-
-// LatLng interface (often imported directly from 'react-native-maps', but defining it here for clarity)
 interface Coordinate extends LatLng {
-  latitude: number;
-  longitude: number;
+    latitude: number;
+    longitude: number;
 }
 
-// Props for the UserLocationCircle component
 interface UserLocationCircleProps {
-  userLocation: Coordinate; // The center of the circle (user's location)
-  accuracy: boolean; // The radius of the circle (location accuracy in meters)
+    userLocation: Coordinate;
 }
 
-// ---
-
-const UserLocationCircle: React.FC<UserLocationCircleProps> = ({
-  userLocation,
-  accuracy,
-}) => {
-  return (
-    <Circle
-      center={userLocation} // center expects LatLng/Coordinate
-      radius={50} // radius expects a number (in meters)
-      strokeColor="rgba(0, 0, 255, 0.2)" // Light blue stroke
-      fillColor="rgba(0, 0, 255, 0.4)" // Blue fill
-    />
-  );
+export default function UserLocationCircle({userLocation}: UserLocationCircleProps) {
+    return (
+        <Marker
+            coordinate={userLocation}
+            anchor={{x: 0.5, y: 0.5}}
+            flat={true}
+            tracksViewChanges={false}
+        >
+            <View style={styles.outerCircle}>
+                <View style={styles.innerCircle}/>
+            </View>
+        </Marker>
+    );
 };
 
-export default UserLocationCircle;
+const styles = StyleSheet.create({
+    outerCircle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 24,
+        height: 24,
+
+        borderRadius: 12,
+        backgroundColor: 'rgba(67, 97, 238, 0.3)',
+    },
+    innerCircle: {
+        width: 14,
+        height: 14,
+
+        borderRadius: 7,
+        backgroundColor: '#4361EE',
+        borderWidth: 2,
+        borderColor: 'white',
+
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+});

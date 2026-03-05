@@ -1,13 +1,14 @@
 import addAddressToList from './Add/addAddressToList';
 import fetchFirstListId from '../User/Fetch/fetchFirstListId';
 import getAddressesByListId from './Get/getAddressesByListId';
-import {AddressItemComplete} from '../../types/Address/AddressType';
+import {AddressItemComplete} from '@/types/Address/AddressType';
 
 
- interface PlaceSelectionData {
-     address_complete: string;
-     latitude: number;
-     longitude: number; }
+interface PlaceSelectionData {
+    address_complete: string;
+    latitude: number;
+    longitude: number;
+}
 
 
 interface HandlePlaceSelectedResult {
@@ -15,10 +16,10 @@ interface HandlePlaceSelectedResult {
     addresses: AddressItemComplete[];
 }
 
-const handlePlaceSelected = async (
+export default async function handlePlaceSelected(
     data: PlaceSelectionData,
     addressListId: string,
-): Promise<HandlePlaceSelectedResult> => {
+): Promise<HandlePlaceSelectedResult> {
     let listIdToUse = addressListId ?? await fetchFirstListId();
 
     await addAddressToList(
@@ -35,5 +36,3 @@ const handlePlaceSelected = async (
         addresses,
     };
 };
-
-export default handlePlaceSelected;

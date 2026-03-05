@@ -13,7 +13,8 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allowing location access allows us to find local events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Allowing location access allows us to find local events near you."
-      }
+      },
+      "bundleIdentifier": "com.nicusorgg.novaRushFrontTsNew"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +24,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.nicusorgg.novaRushFrontTsNew"
     },
     "web": {
       "output": "static",
@@ -43,7 +45,8 @@
           }
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "react-native-background-geolocation"
     ],
     "experiments": {
       "typedRoutes": true,

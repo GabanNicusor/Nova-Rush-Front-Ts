@@ -1,172 +1,171 @@
-import React, { useState } from 'react';
-import { useAppDispatch } from '../state/store';
-import { Button, StyleSheet, Text, TextInput, View, Alert, ViewStyle, TextStyle } from 'react-native';
+import React, {useState} from 'react';
+import {useAppDispatch} from '@/state/store';
+import {Alert, Button, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle} from 'react-native';
 
-// External
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-// Service
 import sendUserCredentialsToAuthenticate from "../service/Auth/sendUserCredentialsToAuthenticate";
 import getUserId from "../service/User/Get/getUserId";
 import getUserAddressList from "../service/RouteAddressList/Get/getUserAddressList";
-import getAddressStartId from "../service/Address/Get/getAddressStartId";
+import getUserAddressStart from "../service/Address/Get/getUserAddressStart";
 
-// Redux
-import {setCodeExpirationTimestamp, setRouteList, setAddressListId} from "../state/navSlice";
+import {setAddressListId, setCodeExpirationTimestamp, setRouteList, setUserStartAddress} from "@/state/navSlice";
 import getUserEmailTimeStamp from "../service/User/Get/getUserEmailTimeStamp";
-import fetchAddressesForSelectedList from "../service/Address/Fetch/fetchAddressesForSelectedList";
 
-// --- Interfaces ---
+interface IStyles {
+    container: ViewStyle;
+    title: TextStyle;
+    input: TextStyle;
+    divider: ViewStyle;
+    footer: ViewStyle;
+}
 
-// Define your app's navigation structure
 type RootStackParamList = {
-  LoginScreen: undefined;
-  RegisterScreen: undefined;
-  EmailVerificationScreen: { email: string };
-  StartAddressScreen: undefined;
-  MainApp: undefined;
+    LoginScreen: undefined;
+    RegisterScreen: undefined;
+    EmailVerificationScreen: { email: string };
+    StartAddressScreen: undefined;
+    MainApp: undefined;
 };
 
-// --- Component ---
+export default function LoginScreen() {
+    const [emailOrUsername, setEmailOrUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
 
-const LoginScreen: React.FC = () => {
-  const [emailOrUsername, setEmailOrUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const dispatch = useAppDispatch();
 
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const dispatch = useAppDispatch();
+    const handleLogin = async (): Promise<void> => {
+        try {
+            const response = await sendUserCredentialsToAuthenticate(emailOrUsername, password);
+            if ('token' in response && response.token && response.token !== 'false' && response.token.length > 0) {
+                const user_id = await getUserId();
 
-  const handleLogin = async (): Promise<void> => {
-    try {
-      const response = await sendUserCredentialsToAuthenticate(emailOrUsername, password);
-      // Check if token is valid (Assuming response.token is a string)
-      if ('token' in response && response.token && response.token !== 'false' && response.token.length > 0) {
-        const user_id = await getUserId();
+                if (user_id) {
+                    const routeList = await getUserAddressList(user_id);
+                    dispatch(setRouteList(routeList));
+                    dispatch(setAddressListId(routeList[0].id));
 
-        if (user_id) {
-          const routeList = await getUserAddressList(user_id);
-          dispatch(setRouteList(routeList));
-          dispatch(setAddressListId(routeList[0].id));
+                    try {
+                        const startAddress = await getUserAddressStart(user_id);
 
-          try {
-            const startAddressId = await getAddressStartId(user_id);
-
-            // Navigate based on whether the user has set a starting location
-            // @ts-ignore
-            if (startAddressId === false) {
-              navigation.navigate("StartAddressScreen");
+                        if (startAddress) {
+                            dispatch(setUserStartAddress(startAddress));
+                            navigation.navigate("MainApp");
+                        } else {
+                            navigation.navigate("StartAddressScreen");
+                        }
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    } catch (error) {
+                        Alert.alert("Error", "Something went wrong while checking start address.");
+                    }
+                }
             } else {
-              navigation.navigate("MainApp");
+                Alert.alert('Authentication Failed', 'Account not found or not activated.');
             }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (error) {
-            Alert.alert("Error", "Something went wrong while checking start address.");
-          }
+        } catch (error) {
+            console.error("Login Error:", error);
+            Alert.alert('Invalid credentials', 'Please check your username and password.');
         }
-      } else {
-        Alert.alert('Authentication Failed', 'Account not found or not activated.');
-      }
-    } catch (error) {
-      console.error("Login Error:", error);
-      Alert.alert('Invalid credentials', 'Please check your username and password.');
-    }
-  };
+    };
 
-  const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+    const isValidEmail = (email: string): boolean => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
-  const handleEmailVerification = async (): Promise<void> => {
-    if (isValidEmail(email)) {
-      const code = await getUserEmailTimeStamp(email);
-      dispatch(setCodeExpirationTimestamp(code ?? -1))
-      // TypeScript now knows this requires an object with an 'email' string
-      navigation.navigate("EmailVerificationScreen", { email });
-    } else {
-      Alert.alert('❎ Invalid Email 📧', 'Please check your email address');
-    }
-  };
+    const handleEmailVerification = async (): Promise<void> => {
+        if (isValidEmail(email)) {
+            const code = await getUserEmailTimeStamp(email);
+            dispatch(setCodeExpirationTimestamp(code ?? -1))
+            navigation.navigate("EmailVerificationScreen", {email});
+        } else {
+            Alert.alert('❎ Invalid Email 📧', 'Please check your email address');
+        }
+    };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Login</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Email or Username"
-        value={emailOrUsername}
-        onChangeText={setEmailOrUsername}
-        autoCapitalize="none"
-      />
+            <TextInput
+                style={styles.input}
+                placeholder="Enter Email or Username"
+                value={emailOrUsername}
+                onChangeText={setEmailOrUsername}
+                autoCapitalize="none"
+            />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+            <TextInput
+                style={styles.input}
+                placeholder="Enter Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
 
-      <Button title="Login" onPress={handleLogin} />
+            <Button title="Login" onPress={handleLogin}/>
 
-      <View style={styles.divider} />
+            <View style={styles.divider}/>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Verify Email if not activated"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+            <TextInput
+                style={styles.input}
+                placeholder="Verify Email if not activated"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
 
-      <Button
-        title="Go to Email Verification"
-        onPress={handleEmailVerification}
-      />
+            <Button
+                title="Go to Email Verification"
+                onPress={handleEmailVerification}
+            />
 
-      <View style={styles.footer}>
-        <Button
-          title="Go to Register"
-          onPress={() => navigation.navigate("RegisterScreen")}
-        />
-      </View>
-    </View>
-  );
+            <View style={styles.footer}>
+                <Button
+                    title="Go to Register"
+                    onPress={() => navigation.navigate("RegisterScreen")}
+                />
+            </View>
+        </View>
+    );
 };
 
-// --- Styles ---
+const styles = StyleSheet.create<IStyles>({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f2f2f2',
-  } as ViewStyle,
-  title: {
-    fontSize: 24,
-    marginBottom: 24,
-    fontWeight: 'bold',
-  } as TextStyle,
-  input: {
-    width: '100%',
-    padding: 12,
-    marginVertical: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  } as TextStyle,
-  divider: {
-    height: 20,
-  } as ViewStyle,
-  footer: {
-    marginTop: 10,
-  } as ViewStyle,
+        backgroundColor: '#f2f2f2',
+    },
+
+    title: {
+        marginBottom: 24,
+
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
+
+    input: {
+        width: '100%',
+        padding: 12,
+        marginVertical: 8,
+
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+    },
+
+    divider: {
+        height: 20,
+    },
+
+    footer: {
+        marginTop: 10,
+    },
 });
-
-export default LoginScreen;

@@ -1,43 +1,39 @@
-import React, {
-    useEffect,
-    useRef,
-    SetStateAction,
-    Dispatch,
-} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useRef,} from 'react';
 import {
-    View,
+    Animated,
+    Button,
+    Keyboard,
+    StyleSheet,
     Text,
     TextInput,
-    Button,
-    StyleSheet,
-    Animated,
-    TouchableWithoutFeedback,
-    Keyboard,
-    StyleProp,
-    ViewStyle,
     TextStyle,
+    TouchableWithoutFeedback,
+    View,
+    ViewStyle,
 } from 'react-native';
 
-// --- Type Definitions ---
+interface IStyles {
+    overlay: ViewStyle;
+    modalContent: ViewStyle;
+    modalTitle: TextStyle;
+    input: TextStyle;
+}
 
 interface MapAddressModalProps {
     visible: boolean;
     addressInput: string;
-    setAddressInput: Dispatch<SetStateAction<string>>; // Setter function from useState<string>
+    setAddressInput: Dispatch<SetStateAction<string>>;
     handleSaveAddress: () => void;
     handleCloseModal: () => void;
 }
 
-// ---
-
-const MapAddressModal: React.FC<MapAddressModalProps> = ({
-                                                             visible,
-                                                             addressInput,
-                                                             setAddressInput,
-                                                             handleSaveAddress,
-                                                             handleCloseModal
-                                                         }) => {
-    // useRef must be explicitly typed as Animated.Value<number>
+export default function MapAddressModal({
+                                            visible,
+                                            addressInput,
+                                            setAddressInput,
+                                            handleSaveAddress,
+                                            handleCloseModal
+                                        }: MapAddressModalProps) {
     const fadeAnim = useRef<Animated.Value>(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -46,32 +42,27 @@ const MapAddressModal: React.FC<MapAddressModalProps> = ({
             duration: 300,
             useNativeDriver: true
         }).start();
-    }, [visible, fadeAnim]); // Added fadeAnim to dependency array
+    }, [visible, fadeAnim]);
 
-    // Early exit if not visible, optimizing render performance
     if (!visible) return null;
 
     return (
-        // Dismiss the keyboard when tapping anywhere outside the modal content
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.overlay as StyleProp<ViewStyle>}>
+            <View style={styles.overlay}>
                 <Animated.View
                     style={[
                         styles.modalContent,
-                        // The opacity style is handled by the Animated value
                         {opacity: fadeAnim}
                     ]}
                 >
-                    <Text style={styles.modalTitle as StyleProp<TextStyle>}>Add Address</Text>
+                    <Text style={styles.modalTitle}>Add Address</Text>
                     <TextInput
-                        style={styles.input as StyleProp<TextStyle>}
+                        style={styles.input}
                         placeholder="Enter address"
                         value={addressInput}
                         onChangeText={setAddressInput}
                     />
                     <Button title="Save Address" onPress={handleSaveAddress}/>
-                    {/* Add margin to separate buttons for better UI */}
-                    {/* eslint-disable-next-line react-native/no-inline-styles */}
                     <View style={{marginTop: 10}}>
                         <Button title="Cancel" onPress={handleCloseModal}/>
                     </View>
@@ -81,43 +72,50 @@ const MapAddressModal: React.FC<MapAddressModalProps> = ({
     );
 };
 
-export default MapAddressModal;
-
-// 3. Define styles with explicit types
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyles>({
     overlay: {
         position: "absolute",
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
         justifyContent: "center",
         alignItems: "center",
-    } as ViewStyle,
+
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+
     modalContent: {
         width: "80%",
-        backgroundColor: "white",
         padding: 20,
-        borderRadius: 10,
         alignItems: "center",
-        elevation: 5,
+
+        backgroundColor: "white",
+        borderRadius: 10,
+
         shadowColor: "#000",
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.25,
         shadowRadius: 4,
-    } as ViewStyle,
+
+        elevation: 5,
+    },
+
     modalTitle: {
+        marginBottom: 10,
+
         fontSize: 18,
         fontWeight: "bold",
-        marginBottom: 10,
-    } as TextStyle,
+    },
+
     input: {
         width: "100%",
         height: 40,
+        paddingLeft: 10,
+        marginBottom: 10,
+
         borderColor: "gray",
         borderWidth: 1,
-        marginBottom: 10,
-        paddingLeft: 10,
-    } as TextStyle,
+        fontSize: 16,
+    },
 });

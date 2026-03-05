@@ -1,14 +1,18 @@
-import React, {useState, useMemo, useEffect} from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    TextStyle,
-} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {StyleSheet, Text, TextStyle, View, ViewStyle,} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import {ExpressType} from '../../types/enums/ExpressType';
+import {ExpressType} from '@/types/enums/ExpressType';
 
 type ExpressTimeValue = 1 | 8 | 9 | 10 | 12;
+
+interface IStyles {
+    container: ViewStyle;
+    label: TextStyle;
+    pickerWrapper: ViewStyle;
+    pickerClipper: ViewStyle;
+    picker: TextStyle;
+    item: TextStyle;
+}
 
 interface ExpressItem {
     expressType: ExpressType;
@@ -36,39 +40,34 @@ const typeToTimeMap: Record<ExpressType, number> = {
     [ExpressType.TEN]: 10,
     [ExpressType.TWELVE]: 12,
 }
-// ... (imports and types remain the same)
 
-const ExpressTimeCard: React.FC<ExpressTimeCardProps> = ({
-                                                             item,
-                                                             setSelectedExpress,
-                                                         }) => {
-    // Position 0 in this array is "--:--"
+export default function ExpressTimeCard({
+                                            item,
+                                            setSelectedExpress,
+                                        }: ExpressTimeCardProps) {
+
     const times: ExpressTimeValue[] = [1, 8, 9, 10, 12];
 
     const initialTime: ExpressTimeValue = useMemo(() => {
-        // 1. Get the raw value from the item
         const type = item.expressType;
-        // 2. Direct mapping: If it exists in our map (including STANDARD), return it
         if (type !== undefined && type in typeToTimeMap) {
             return typeToTimeMap[type] as ExpressTimeValue;
         }
-        // 3. Fallback specifically to 0 (STANDARD) if data is missing or invalid
         return 1;
     }, [item.expressType]);
 
     const [selected, setSelected] = useState<ExpressTimeValue>(initialTime);
-
-    // This ensures that when the data changes (or the Pager swipes),
-    // the picker moves to the correct position.
-    useEffect(() => {
-        setSelected(initialTime);
-    }, [initialTime]);
 
     const handleChange = (itemValue: ExpressTimeValue | unknown) => {
         const newTime = itemValue as ExpressTimeValue;
         setSelected(newTime);
         setSelectedExpress(newTime);
     };
+
+    useEffect(() => {
+        setSelected(initialTime);
+    }, [initialTime]);
+
 
     return (
         <View style={styles.container}>
@@ -85,7 +84,7 @@ const ExpressTimeCard: React.FC<ExpressTimeCardProps> = ({
                             <Picker.Item
                                 key={time}
                                 label={time === 1 ? "--:--" : `${time}:00 h`}
-                                value={time} // Must be 0 for STANDARD to match 'selected'
+                                value={time}
                             />
                         ))}
                     </Picker>
@@ -94,43 +93,52 @@ const ExpressTimeCard: React.FC<ExpressTimeCardProps> = ({
         </View>
     );
 };
-const styles = StyleSheet.create({
+
+const styles = StyleSheet.create<IStyles>({
     container: {
+        height: 80,
+        padding: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+
         backgroundColor: '#fff',
         borderRadius: 16,
-        padding: 16,
+
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 8,
+
         elevation: 3,
-        height: 80,
-        alignItems: 'center',
-        flexDirection: 'row',
     },
+
     label: {
-        fontSize: 22,
         marginRight: 16,
+
+        fontSize: 22,
         fontWeight: '600',
     },
+
     pickerWrapper: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
+
     pickerClipper: {
         height: 40,
-        overflow: 'hidden',
         justifyContent: 'center',
-    } ,
+
+        overflow: 'hidden',
+    },
+
     picker: {
         height: 120,
         width: 200,
         justifyContent: 'center',
     },
+
     item: {
         fontSize: 30,
     },
 });
-
-export default ExpressTimeCard;

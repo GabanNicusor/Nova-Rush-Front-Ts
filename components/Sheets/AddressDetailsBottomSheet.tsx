@@ -1,16 +1,7 @@
-import React, {
-    useRef,
-    useEffect,
-    useMemo,
-    SetStateAction,
-    Dispatch,
-} from 'react';
-import {
-    Dimensions,
-    StyleSheet,
-    View,
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useRef} from 'react';
+import {Dimensions, StyleSheet, View, ViewStyle} from 'react-native';
 
-} from 'react-native';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 
 import {
     selectAddressDetailsIndexSelected,
@@ -19,11 +10,7 @@ import {
     selectAddressListId,
     setAddressDetailsList,
     setIsAddressPressesForDetails,
-} from '../../state/navSlice';
-
-import AddressDetailsPagerBottomSheet from './AddressDetailsPagerBottomSheet';
-
-import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+} from '@/state/navSlice';
 
 import XButton from '../Buttons/XButton';
 import AddressNameCard from '../Cards/AddressNameCard';
@@ -36,16 +23,19 @@ import PackageSelectorCard from '../Cards/PackageSelectorCard';
 import fetchAddressDetails from '../../service/AddressDetails/Fetch/fetchAddressDetails';
 import getUserId from '../../service/User/Get/getUserId';
 
-// Redux & Type Imports
-import {AppDispatch, useAppDispatch, useAppSelector} from '../../state/store';
-import {ReviewType} from '../../types/enums/ReviewType';
-import {CustomAddressDetailsItem} from '../../types/AddressDetails/CustomAddressDetails';
-import {OrderTypeDisplay} from '../../types/enums/OrderType'; // Import display types
+import AddressDetailsPagerBottomSheet from './AddressDetailsPagerBottomSheet';
+
+import {AppDispatch, useAppDispatch, useAppSelector} from '@/state/store';
+import {ReviewType} from '@/types/enums/ReviewType';
+import {CustomAddressDetailsItem} from '@/types/AddressDetails/CustomAddressDetails';
+import {OrderTypeDisplay} from '@/types/enums/OrderType';
 
 const {width} = Dimensions.get('window');
 const screenHeight = Dimensions.get('window').height;
 
-// --- Inner Component Props ---
+interface IStyle {
+    cardContainer: ViewStyle;
+}
 
 interface InnerAddressItemProps {
     item: CustomAddressDetailsItem;
@@ -67,8 +57,6 @@ interface InnerAddressItemProps {
 
     dispatch: AppDispatch;
 }
-
-// --- Address Item (The Card Stack) ---
 
 const AddressItem: React.FC<InnerAddressItemProps> = ({
                                                           item,
@@ -107,7 +95,7 @@ const AddressItem: React.FC<InnerAddressItemProps> = ({
 
         <AddressDetailsCard
             name={name}
-            number={number}
+            phoneNumber={number}
             notes={notes}
             setName={setName}
             setNumber={setNumber}
@@ -122,10 +110,9 @@ const AddressItem: React.FC<InnerAddressItemProps> = ({
     </View>
 );
 
-// --- Main Bottom Sheet Container ---
 
-const AddressDetailsBottomSheet: React.FC = () => {
-    const flatListRef = useRef<any>(null);
+export default function AddressDetailsBottomSheet() {
+    const flatListRef = useRef<any>(-1);
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['25%', '45%', '55%', '75%', '92%'], []);
 
@@ -135,6 +122,12 @@ const AddressDetailsBottomSheet: React.FC = () => {
     const index = useAppSelector(selectAddressDetailsIndexSelected);
 
     const dispatch = useAppDispatch();
+
+    const closeBottomSheet = async () => {
+        const user_id = await getUserId();
+        dispatch(setAddressDetailsList(await fetchAddressDetails(addressList, user_id, addressListId,)));
+        dispatch(setIsAddressPressesForDetails(false));
+    };
 
     useEffect(() => {
         if (!addressDetails || addressDetails.length === 0) {
@@ -151,18 +144,12 @@ const AddressDetailsBottomSheet: React.FC = () => {
         }
     }, [index]);
 
-    const closeBottomSheet = async () => {
-        const user_id = await getUserId();
-        dispatch(setAddressDetailsList(await fetchAddressDetails(addressList, user_id, addressListId,)));
-        dispatch(setIsAddressPressesForDetails(false));
-    };
-
     return (
-        <BottomSheet ref={bottomSheetRef} index={4} snapPoints={snapPoints}>
+        <BottomSheet ref={bottomSheetRef} index={2} snapPoints={snapPoints}>
             <BottomSheetView style={{maxHeight: screenHeight * 0.9}}>
                 <XButton onPress={closeBottomSheet}/>
                 <AddressDetailsPagerBottomSheet
-                    AddressItem={AddressItem}
+                    AddressDetailsComponent={AddressItem}
                     addressList={addressList}
                     addressListId={addressListId || ''}
                     addressDetails={addressDetails}
@@ -173,7 +160,7 @@ const AddressDetailsBottomSheet: React.FC = () => {
     );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyle>({
     cardContainer: {
         width: width - 25,
         alignSelf: 'center',
@@ -181,5 +168,3 @@ const styles = StyleSheet.create({
         gap: 15,
     },
 });
-
-export default AddressDetailsBottomSheet;

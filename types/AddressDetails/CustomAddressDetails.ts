@@ -20,6 +20,8 @@ export interface customAddressDetailsItem
     > {
   address_complete: string;
   selectedVote: ReviewType;
+  latitude: number;
+  longitude: number;
 }
 
 

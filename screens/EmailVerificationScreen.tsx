@@ -1,15 +1,23 @@
-import React, {useState, useEffect} from 'react';
-import {Button, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
-import {useNavigation, RouteProp} from "@react-navigation/native";
+import React, {useCallback, useEffect, useState} from 'react';
+import {Alert, Button, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {RouteProp, useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
-import {useAppDispatch, useAppSelector} from "../state/store";
-import {selectCodeExpirationTimestamp, setCodeExpirationTimestamp, clearCodeExpiration} from "../state/navSlice"; // Updated imports
-
+import {useAppDispatch, useAppSelector} from "@/state/store";
+import {clearCodeExpiration, selectCodeExpirationTimestamp, setCodeExpirationTimestamp} from "@/state/navSlice"; // Updated imports
 import sendNewCodeRequest from "../service/Auth/sendNewCodeRequest";
 import sendCodeVerification from "../service/Auth/sendCodeVerification";
 import getUserEmailTimeStamp from "../service/User/Get/getUserEmailTimeStamp";
 
-// --- Types ---
+interface IStyles {
+    container: ViewStyle;
+    header: TextStyle;
+    subtitle: TextStyle;
+    input: TextStyle;
+    button: ViewStyle;
+    buttonText: TextStyle;
+    timer: TextStyle;
+}
+
 type RootStackParamList = {
     LoginScreen: undefined;
     EmailVerificationScreen: { email: string };
@@ -22,8 +30,8 @@ interface EmailVerificationProps {
     route: EmailVerificationScreenRouteProp;
 }
 
-// --- Component ---
-const EmailVerificationScreen: React.FC<EmailVerificationProps> = ({route}) => {
+/** @route is just and way to send email as object using Stack */
+export default function EmailVerificationScreen({route}: EmailVerificationProps) {
     const {email} = route.params;
 
     const [code, setCode] = useState<string>('');
@@ -31,35 +39,14 @@ const EmailVerificationScreen: React.FC<EmailVerificationProps> = ({route}) => {
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp>();
 
-    // Calculate remaining seconds from server timestamp
-    const getRemainingSeconds = (): number => {
+    const getRemainingSeconds = useCallback((): number => {
         if (!expirationTimestamp) return 0;
-
-        const expirationDate = new Date(expirationTimestamp); // Parses ISO string perfectly
-        const now = new Date();
-        const diffMs = expirationDate.getTime() - now.getTime();
-        return Math.max(0, Math.floor(diffMs / 1000));
-    };
+        const diff = new Date(expirationTimestamp).getTime() - Date.now();
+        return Math.max(0, Math.floor(diff / 1000));
+    }, [expirationTimestamp]);
 
     const [remainingSeconds, setRemainingSeconds] = useState<number>(getRemainingSeconds());
 
-    // Update countdown every second
-    useEffect(() => {
-        setRemainingSeconds(getRemainingSeconds());
-
-        if (remainingSeconds <= 0) return;
-
-        const interval = setInterval(() => {
-            setRemainingSeconds(prev => {
-                const next = prev - 1;
-                return next <= 0 ? 0 : next;
-            });
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [expirationTimestamp]); // Re-run only when expiration timestamp changes
-
-    // Format MM:SS
     const formatTime = (seconds: number): string => {
         const mins = Math.floor(seconds / 60);
         const secs = (seconds % 60).toString().padStart(2, '0');
@@ -69,10 +56,11 @@ const EmailVerificationScreen: React.FC<EmailVerificationProps> = ({route}) => {
     const handleVerification = async (): Promise<void> => {
         try {
             const response = await sendCodeVerification(code.trim(), email);
-            if (response != undefined && response.status === 200) {
-                dispatch(clearCodeExpiration()); // Clean up on success
+            if (response !== undefined && response.status === 200) {
+                dispatch(clearCodeExpiration());
                 navigation.navigate('LoginScreen');
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             Alert.alert('❎ Invalid Code ❎', 'The code is incorrect or has expired. Please try again.');
         }
@@ -87,23 +75,42 @@ const EmailVerificationScreen: React.FC<EmailVerificationProps> = ({route}) => {
         try {
             const response = await sendNewCodeRequest(email);
 
-            if (response != undefined && response.ok || response != undefined && response.status === 200 ) {
+            if (response !== undefined && response.ok || response !== undefined && response.status === 200) {
                 const timeStamp = await getUserEmailTimeStamp(email);
 
                 if (timeStamp) {
                     dispatch(setCodeExpirationTimestamp(timeStamp)); // Store new server timestamp
                 } else {
-                    // Fallback: assume 15 minutes from now if server doesn't provide it
                     dispatch(setCodeExpirationTimestamp(Math.floor(Date.now() / 1000) + 900));
                 }
 
                 Alert.alert('✅ Success', 'A new verification code has been sent!');
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
         }
     };
 
     const canRequestNewCode = remainingSeconds === 0;
+
+    useEffect(() => {
+        const initial = getRemainingSeconds();
+        setRemainingSeconds(initial);
+
+        if (initial <= 0) return;
+
+        const interval = setInterval(() => {
+            setRemainingSeconds(prev => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [expirationTimestamp, getRemainingSeconds]);
 
     return (
         <View style={styles.container}>
@@ -148,58 +155,70 @@ const EmailVerificationScreen: React.FC<EmailVerificationProps> = ({route}) => {
     );
 };
 
-// --- Styles ---
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyles>({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 24,
+
         backgroundColor: '#f5f5f5',
     },
+
     header: {
-        fontSize: 26,
-        fontWeight: 'bold',
         marginBottom: 8,
         textAlign: 'center',
+
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#1A1C1E',
     },
+
     subtitle: {
-        fontSize: 16,
-        color: '#666',
         marginBottom: 30,
         textAlign: 'center',
+
+        fontSize: 16,
+        color: '#666',
     },
+
     input: {
-        height: 56,
         width: '100%',
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 8,
+        height: 56,
         paddingHorizontal: 16,
         marginBottom: 24,
-        backgroundColor: '#fff',
-        fontSize: 18,
         textAlign: 'center',
+
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+        fontSize: 18,
         letterSpacing: 4,
     },
+
     button: {
-        backgroundColor: '#007BFF',
-        padding: 16,
-        borderRadius: 8,
         width: '100%',
+        padding: 16,
         alignItems: 'center',
+
+        backgroundColor: '#007BFF',
+        borderRadius: 8,
+
+        elevation: 2,
     },
+
     buttonText: {
         color: '#fff',
         fontSize: 17,
         fontWeight: '600',
     },
+
     timer: {
         marginTop: 20,
-        color: '#d4380d',
+
         fontSize: 16,
         fontWeight: '500',
+        color: '#d4380d',
     },
 });
-
-export default EmailVerificationScreen;

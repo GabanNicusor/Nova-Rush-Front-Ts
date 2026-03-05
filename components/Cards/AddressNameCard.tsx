@@ -1,64 +1,61 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-  StyleProp,
-} from 'react-native';
-
-// --- Type Definitions ---
+import {StyleSheet, Text, TextInput, TextStyle, View, ViewStyle} from 'react-native';
 
 interface AddressNameCardProps {
-  address: string;
+    address: string;
 }
 
-// ---
+interface IStyles {
+    card: ViewStyle;
+    cardTitle: TextStyle;
+    cardInput: TextStyle;
+}
 
-const AddressNameCard: React.FC<AddressNameCardProps> = ({ address }) => {
-  return (
-    <View style={styles.card as StyleProp<ViewStyle>}>
-      <Text style={styles.cardTitle as StyleProp<TextStyle>}>
-        Delivery Location
-      </Text>
-      {/* The TextInput is used here as a styled, read-only display element */}
-      <TextInput
-        style={styles.cardInput as StyleProp<TextStyle>}
-        value={address}
-        editable={false} // Prevents user input
-        selectTextOnFocus={false} // Prevents keyboard from popping up on tap
-      />
-    </View>
-  );
+export default function AddressNameCard({address}: AddressNameCardProps) {
+    return (
+        <View style={styles.card}>
+            <Text style={styles.cardTitle}>
+                Delivery Location
+            </Text>
+            <TextInput
+                style={styles.cardInput}
+                value={address}
+                editable={false}
+                selectTextOnFocus={false}
+            />
+        </View>
+    );
 };
 
-// 3. Define styles with explicit types
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  } as ViewStyle,
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
-  } as TextStyle,
-  cardInput: {
-    fontSize: 16,
-    padding: 12,
-    backgroundColor: '#f1f3f5',
-    borderRadius: 10,
-    color: '#333',
-  } as TextStyle,
-});
+const styles = StyleSheet.create<IStyles>({
+    card: {
+        padding: 16,
 
-export default AddressNameCard;
+        backgroundColor: '#fff',
+        borderRadius: 16,
+
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+
+        elevation: 3,
+    },
+
+    cardTitle: {
+        marginBottom: 10,
+
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+
+    cardInput: {
+        padding: 12,
+
+        fontSize: 16,
+        backgroundColor: '#f1f3f5',
+        borderRadius: 10,
+        color: '#333',
+    },
+});

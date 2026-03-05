@@ -1,91 +1,78 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
-    TextStyle,
-} from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../state/store';
+import {StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {useAppDispatch, useAppSelector} from '@/state/store';
 
-
-// External
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {ScaleDecorator} from 'react-native-draggable-flatlist';
 
-// Redux
-import {
-    selectAddressListId,
-    setAddressDetailsIndexSelected,
-    setIsAddressPressesForDetails,
-    setAddressList,
-} from '../../state/navSlice';
+import {selectAddressListId, setAddressDetailsIndexSelected, setIsAddressPressesForDetails} from '@/state/navSlice';
 
-
-// Utils
 import handleRemoveAddress from '../../utils/handleRemoveAddress';
 
-//hook
-import {useIsNewStop} from "../../hooks/useIsNewStop"
-import {AddressItemComplete} from '../../types/Address/AddressType'
+import {useIsNewStop} from "@/hooks/useIsNewStop"
+import {AddressItemComplete} from '@/types/Address/AddressType'
 import fetchAddressesForSelectedList from "../../service/Address/Fetch/fetchAddressesForSelectedList";
 
-// --- Interfaces ---
+interface IStyles {
+    routeItemCard: ViewStyle;
+    routeItemActiveBg: ViewStyle;
+    routeItemInactiveBg: ViewStyle;
+    routeItemLeftSection: ViewStyle;
+    routeItemIndexCircle: ViewStyle;
+    routeItemIndexText: TextStyle;
+    routeItemAddressText: TextStyle;
+    routeItemDeleteButton: ViewStyle;
+    routeItemNewStopBorder: ViewStyle;
+}
+
 interface RenderRouteAddressListProps {
     item: AddressItemComplete;
     index: number;
-    drag: () => void;
+    drag?: () => void;
+
     isActive: boolean;
 }
 
-// --- Component ---
 
-const RenderRouteAddressList: React.FC<RenderRouteAddressListProps> = ({
-                                                                           item,
-                                                                           index,
-                                                                           drag,
-                                                                           isActive,
-                                                                       }) => {
-
+export default function RenderRouteAddressList({item, index, drag, isActive}: RenderRouteAddressListProps) {
     const dispatch = useAppDispatch();
-    const addressListId = useAppSelector(selectAddressListId); // Top-level
-
+    const addressListId = useAppSelector(selectAddressListId);
     const isNewStop = useIsNewStop(item.id);
 
     const handleAddressDetails = async (): Promise<void> => {
-        if (!addressListId) return; // Safety check
-
-        // Fetch the latest addresses for this list
+        if (!addressListId) return;
         await fetchAddressesForSelectedList(addressListId, dispatch);
-
-        // Show BottomSheet and select index
+        console.log(index);
         dispatch(setIsAddressPressesForDetails(true));
         dispatch(setAddressDetailsIndexSelected(index));
     };
 
-    return (
-        <ScaleDecorator>
-            <TouchableOpacity
-                onLongPress={drag}
-                onPress={handleAddressDetails}
-                disabled={isActive}
-                style={[
-                    styles.routeItemCard,
-                    // Replaced inline background logic with StyleSheet references
-                    isActive ? styles.routeItemActiveBg : styles.routeItemInactiveBg,
-                    isNewStop && styles.routeItemNewStopBorder,
-                ]}
-            >
-                <View style={styles.routeItemLeftSection}>
-                    <View style={styles.routeItemIndexCircle}>
-                        <Text style={styles.routeItemIndexText}>{index + 1}</Text>
-                    </View>
-                    <Text style={styles.routeItemAddressText} numberOfLines={2}>
-                        {item.address_complete}
+    const content = (
+        <TouchableOpacity
+            onLongPress={drag}
+            onPress={handleAddressDetails}
+            disabled={isActive}
+            style={[
+                styles.routeItemCard,
+                isActive ? styles.routeItemActiveBg : styles.routeItemInactiveBg,
+                isNewStop && styles.routeItemNewStopBorder,
+            ]}
+        >
+            <View style={styles.routeItemLeftSection}>
+                <View style={[
+                    styles.routeItemIndexCircle,
+                    index === 0 && {backgroundColor: '#28a745'} // Green for Home/Start
+                ]}>
+                    <Text style={styles.routeItemIndexText}>
+                        {index === 0 ? 'H' : index}
                     </Text>
                 </View>
+                <Text style={styles.routeItemAddressText} numberOfLines={2}>
+                    {item.address_complete}
+                </Text>
+            </View>
 
+            {index !== 0 && (
                 <TouchableOpacity
                     onPress={() =>
                         handleRemoveAddress(item.id, addressListId || '', dispatch)
@@ -94,66 +81,80 @@ const RenderRouteAddressList: React.FC<RenderRouteAddressListProps> = ({
                 >
                     <Icon name="trash" size={20} color="#d9534f"/>
                 </TouchableOpacity>
-            </TouchableOpacity>
-        </ScaleDecorator>
+            )}
+        </TouchableOpacity>
     );
+
+    if (!drag) {
+        return content;
+    }
+
+    return <ScaleDecorator>{content}</ScaleDecorator>;
 };
 
-// --- Styles ---
-
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<IStyles>({
     routeItemCard: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 12,
-        borderRadius: 19,
         marginVertical: 8,
         marginHorizontal: 18,
+
+        borderRadius: 19,
+
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 2,
+
         elevation: 3,
-    } as ViewStyle,
-    // Added these to solve the ESLint "no-inline-styles" error
+    },
+
     routeItemActiveBg: {
         backgroundColor: '#23c9cf',
-    } as ViewStyle,
+    },
+
     routeItemInactiveBg: {
         backgroundColor: '#caeaeb',
-    } as ViewStyle,
+    },
+
     routeItemLeftSection: {
         flexDirection: 'row',
         alignItems: 'center',
         flex: 1,
-    } as ViewStyle,
+    },
+
     routeItemIndexCircle: {
         width: 30,
         height: 30,
-        borderRadius: 10,
-        backgroundColor: '#007bff',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 10,
-    } as ViewStyle,
+
+        borderRadius: 10,
+        backgroundColor: '#007bff',
+    },
+
     routeItemIndexText: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
-    } as TextStyle,
+    },
+
     routeItemAddressText: {
+        flexShrink: 1,
+
         fontSize: 16,
         color: '#333',
-        flexShrink: 1,
-    } as TextStyle,
+    },
+
     routeItemDeleteButton: {
         padding: 8,
-    } as ViewStyle,
+    },
+
     routeItemNewStopBorder: {
         borderWidth: 2,
         borderColor: 'red',
         borderStyle: 'dashed',
-    } as ViewStyle,
+    },
 });
-
-export default RenderRouteAddressList;

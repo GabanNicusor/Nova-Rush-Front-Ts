@@ -1,33 +1,27 @@
-import axios, { AxiosResponse } from 'axios';
-import { AddressDetailsItemComplete } from '../../../types/AddressDetails/AddressDetailsType';
+import axios, {AxiosResponse} from 'axios';
+import {AddressDetailsItemComplete} from '@/types/AddressDetails/AddressDetailsType';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-const getAddressDetails = async (
-  userId: string, // Explicitly type the input
-  addressId: string, // Explicitly type the input
-): Promise<AddressDetailsItemComplete | undefined> => {
-  // Type the return promise to be AddressDetail OR null
+export default async function getAddressDetails(
+    userId: string,
+    addressId: string,
+): Promise<AddressDetailsItemComplete | undefined> {
 
-  try {
-    // Use Generics: <AddressDetail> tells TypeScript the structure of response.data
-    const response: AxiosResponse<AddressDetailsItemComplete> = await axios.get(
-      `${API_BASE_URL}/api/v1/address-details/getAddressDetails?user_id=${userId}&address_id=${addressId}`,
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+    try {
+        const response: AxiosResponse<AddressDetailsItemComplete> = await axios.get(
+            `${API_BASE_URL}/api/v1/address-details/getAddressDetails?user_id=${userId}&address_id=${addressId}`,
+            {
+                headers: {'Content-Type': 'application/json'},
+            },
+        );
 
-    if (response.status === 200) {
-      // TypeScript knows response.data is AddressDetail
-      return response.data;
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+        return undefined;
     }
-
-  } catch (error) {
-
-    // Return null as defined in the original catch block
-    return undefined;
-  }
 };
-
-export default getAddressDetails;
