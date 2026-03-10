@@ -49,7 +49,7 @@ export default function useLocalEditsWithAutoSave(addressList: AddressItemComple
             };
             saveAll().then();
         }
-    }, [timeLeft, localEdits, addressList, addressListId, dispatch, userStartAddress]);
+    }, [timeLeft, localEdits, addressList, addressListId, dispatch]);
 
     const updateLocal = (
         address_id: string,
