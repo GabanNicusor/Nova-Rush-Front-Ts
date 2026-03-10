@@ -18,7 +18,7 @@ import {
     ViewStyle,
 } from 'react-native';
 
-import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 import {
     selectAddressList,

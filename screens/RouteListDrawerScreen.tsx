@@ -9,7 +9,6 @@ import {useAppDispatch} from '@/state/store';
 import {setAddressDetailsList, setAddressList, setAddressListId, setPolylineCoordsList} from '@/state/navSlice'
 
 import createNewRouteList from '../service/RouteAddressList/Create/createNewRouteList';
-import getAddressesByListId from '../service/RouteAddressList/Get/getAddressesByListId'
 
 interface IStyles {
     container: ViewStyle;
