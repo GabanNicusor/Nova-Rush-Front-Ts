@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle,} from 'react-native';
+import {FlatList, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -10,6 +10,8 @@ import findAddressSuggestion from '../service/Address/Fetch/findAddressSuggestio
 import addNewAddress from '../service/Address/Add/addNewAddress';
 import getAddressStartIdByAddress from '../service/Address/Get/getAddressStartIdByAddress';
 import addUserStartAddress from '../service/Address/Add/addUserStartAddress';
+import {setUserStartAddress} from "@/state/navSlice";
+import {useAppDispatch} from "@/state/store";
 
 interface IStyles {
     container: ViewStyle;
@@ -45,7 +47,7 @@ export default function StartAddressScreen() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+    const dispatch = useAppDispatch();
     const handleSearch = async (text: string): Promise<void> => {
         setQuery(text);
         if (text) {
@@ -96,6 +98,9 @@ export default function StartAddressScreen() {
                     await addUserStartAddress(user_id, newAddressId);
                     if (res) success = true;
                 }
+                const currentDate: string = new Date().toISOString().split('T')[0];
+
+                dispatch(setUserStartAddress({id: newAddressId, createdAt: currentDate , address_complete: fullAddress,latitude: lat, longitude: lon }));
             }
             if (success) {
                 navigation.navigate('MainApp');

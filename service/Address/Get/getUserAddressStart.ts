@@ -6,7 +6,7 @@ const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export default async function getUserAddressStart(
     userId: string,
-): Promise<AddressItemComplete | null> {
+): Promise<AddressItemComplete | undefined> {
     try {
         const response: AxiosResponse<AddressItemComplete> = await axios.get(
             `${API_BASE_URL}/api/v1/user/start-address?user_id=${userId}`,
@@ -20,8 +20,6 @@ export default async function getUserAddressStart(
         if (response.status === 200) {
             return response.data;
         }
-
-        return null;
     } catch (error) {
         handleApiError(error);
         throw error;

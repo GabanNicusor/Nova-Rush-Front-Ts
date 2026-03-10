@@ -6,7 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useAppDispatch} from '@/state/store';
-import {setAddressList, setAddressListId} from '@/state/navSlice'
+import {setAddressDetailsList, setAddressList, setAddressListId, setPolylineCoordsList} from '@/state/navSlice'
 
 import createNewRouteList from '../service/RouteAddressList/Create/createNewRouteList';
 import getAddressesByListId from '../service/RouteAddressList/Get/getAddressesByListId'
@@ -77,8 +77,10 @@ export default function RouteListDrawerScreen() {
             );
             if (response) {
 
-                dispatch(setAddressList(await getAddressesByListId(response.id)));
-                dispatch(setAddressListId(response.id))
+                dispatch(setAddressList([]));
+                dispatch(setAddressListId(response.id));
+                dispatch(setAddressDetailsList([]));
+                dispatch(setPolylineCoordsList([]));
                 navigation.navigate('MainApp');
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars

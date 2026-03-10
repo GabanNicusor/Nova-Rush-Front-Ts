@@ -50,7 +50,7 @@ export default function LoginScreen() {
                     try {
                         const startAddress = await getUserAddressStart(user_id);
 
-                        if (startAddress) {
+                        if (startAddress?.address_complete !== "false") {
                             dispatch(setUserStartAddress(startAddress));
                             navigation.navigate("MainApp");
                         } else {

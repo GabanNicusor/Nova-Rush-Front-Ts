@@ -23,6 +23,7 @@ import {
     selectPolylineCoordsList,
     selectRouteList,
     selectUserLocation,
+    selectUserStartAddress,
     setAddressDetailsIndexSelected,
     setDestination,
     setIsAddressPressesForDetails,
@@ -50,6 +51,7 @@ import AddressDetailsBottomSheet from '../components/Sheets/AddressDetailsBottom
 import {AddressSearchBottomSheet} from '@/components/Sheets/AddressSearchBottomSheet';
 import AddressNavigationBottomSheet from '../components/Sheets/AddressNavigationBottomSheet';
 import fetchAddressesForSelectedList from "../service/Address/Fetch/fetchAddressesForSelectedList";
+import {AddressItemComplete} from "@/types/Address/AddressType";
 
 interface IStyles {
     bgColour: ViewStyle;
@@ -70,6 +72,7 @@ export default function MapScreen() {
     const addressListId = useAppSelector(selectAddressListId);
     const routeList = useAppSelector(selectRouteList);
     const address = useAppSelector(selectAddressList);
+    const userStartAddress = useAppSelector(selectUserStartAddress);
     const addressDetails = useAppSelector(selectAddressDetailsList)
     const allCoords = useAppSelector(selectPolylineCoordsList);
     const oldOrderedList = useAppSelector(selectAddressListOrder);
@@ -83,15 +86,9 @@ export default function MapScreen() {
     const [isAnimating, setIsAnimating] = useState(false);
 
     const {isFirstOptimize, loading, setIsFirstOptimize} = useFetchOptimizeStatus(addressListId);
-    const [isFollowingUser, setIsFollowingUser] = useState(true);
-
+    const [completeAddress, setCompleteAddress] = useState<AddressItemComplete[]>(address);
     useBackgroundGeolocation();
 
-    const handleUserInteraction = () => {
-        if (isFollowingUser) {
-            setIsFollowingUser(false);
-        }
-    };
 
     const openDrawer = (): void => {
         navigation.openDrawer();
@@ -111,6 +108,7 @@ export default function MapScreen() {
             await getShortestRoute(addressListId, dispatch);
             await updateStopOrder(
                 oldOrderedList,
+                userStartAddress,
                 allCoords,
                 user_id,
                 addressListId,
@@ -142,6 +140,7 @@ export default function MapScreen() {
             destination.longitude,
             addressListId,
         );
+        await fetchAddressesForSelectedList(addressListId, userStartAddress, dispatch);
         setModalVisible(false);
     };
 
@@ -170,21 +169,10 @@ export default function MapScreen() {
         setTimeout(() => setIsAnimating(false), 600);
 
         if (!addressListId) return;
-        await fetchAddressesForSelectedList(addressListId, dispatch);
+        await fetchAddressesForSelectedList(addressListId, userStartAddress, dispatch);
         dispatch(setIsAddressPressesForDetails(true));
         dispatch(setAddressDetailsIndexSelected(index));
     };
-
-    useEffect(() => {
-        if (isFollowingUser && location !== null && mapRef.current) {
-            mapRef.current?.animateToRegion({
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
-            }, 1000);
-        }
-    }, [location, isFollowingUser]);
 
     useEffect(() => {
 
@@ -203,6 +191,13 @@ export default function MapScreen() {
 
     }, [destination]);
 
+    useEffect(() => {
+        const add: AddressItemComplete[] = userStartAddress
+            ? [userStartAddress, ...(address ?? [])]
+            : (address ?? []);
+        setCompleteAddress(add);
+    }, [address, userStartAddress]);
+
     if (!location) {
         return (
             <View style={[styles.size, {justifyContent: 'center', alignItems: 'center'}]}>
@@ -210,7 +205,6 @@ export default function MapScreen() {
             </View>
         );
     }
-
     return (
         <GestureHandlerRootView style={styles.size}>
             <MapViewClustering
@@ -223,7 +217,6 @@ export default function MapScreen() {
                     longitudeDelta: 0.1,
                 }}
                 onLongPress={handleLongPress}
-                onPanDrag={handleUserInteraction}
                 radius={50}
                 clusterColor="#E63946"
                 clusterTextColor="#FFF"
@@ -236,7 +229,7 @@ export default function MapScreen() {
                         coordinate={{latitude: item.latitude, longitude: item.longitude}}
                         onPress={(e) => {
                             e.stopPropagation();
-                            handleMarkerPress(item.address_id, index - 1).then();
+                            handleMarkerPress(item.address_id, index).then();
                         }}
                         anchor={{x: 0.5, y: 1}}
                         tracksViewChanges={selectedMarkerId === item.address_id || isAnimating}
@@ -262,7 +255,7 @@ export default function MapScreen() {
                     />
                 )}
 
-                <RoutePolyline address={address}/>
+                <RoutePolyline address={completeAddress}/>
             </MapViewClustering>
 
             <MapAddressModal
@@ -298,20 +291,13 @@ export default function MapScreen() {
                     <View style={styles.navigationButtonContainer}>
                         <NavigateButton onPress={handleNavigatePressed}/>
                     </View>
-                )}
-            {!isFollowingUser && (
-                <TouchableOpacity
-                    onPress={() => setIsFollowingUser(true)}
-                    style={styles.recenterButton}
-                >
-                    <Text>Recenter</Text>
-                </TouchableOpacity>
-            )}
+                )
+            }
 
             {isNavigatePressed ? (
                 <AddressNavigationBottomSheet/>
             ) : !isAddressPressed ? (
-                <AddressSearchBottomSheet/>
+                <AddressSearchBottomSheet mapRef={mapRef}/>
             ) : (
                 <AddressDetailsBottomSheet/>
             )}

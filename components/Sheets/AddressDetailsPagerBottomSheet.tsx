@@ -6,10 +6,10 @@ import {OrderType, OrderTypeDisplay} from '@/types/enums/OrderType';
 import {ReviewType} from '@/types/enums/ReviewType';
 import {CalculationType} from '@/types/enums/CalculationType';
 
-import {setAddressDetailsList} from '@/state/navSlice';
+import {selectUserStartAddress, setAddressDetailsList} from '@/state/navSlice';
 import {CustomAddressDetailsItem} from '@/types/AddressDetails/CustomAddressDetails';
 import {AddressItemComplete} from '@/types/Address/AddressType';
-import {useAppDispatch} from '@/state/store';
+import {useAppDispatch, useAppSelector} from '@/state/store';
 
 import getUserId from '../../service/User/Get/getUserId';
 import fetchAddressDetails from '../../service/AddressDetails/Fetch/fetchAddressDetails';
@@ -52,6 +52,7 @@ export default function AddressDetailsPagerBottomSheet({
                                                                   flatListRef,
                                                               }:PagerProps) {
     const dispatch = useAppDispatch();
+    const userStartAddress = useAppSelector(selectUserStartAddress);
 
     const {localEdits, updateLocal} = useLocalEditsWithAutoSave(addressList,addressListId, dispatch);
 
@@ -69,21 +70,21 @@ export default function AddressDetailsPagerBottomSheet({
             await updateSelectedVote(addressId, reviewType, user_id);
         }
 
-        const refreshed = await fetchAddressDetails(addressList, user_id, addressListId);
+        const refreshed = await fetchAddressDetails(addressList, userStartAddress, user_id, addressListId);
         dispatch(setAddressDetailsList(refreshed));
     };
 
     const handleExpressTime = async (address_id: string, user_id: string, list_id: string, selectedTime: number) => {
         const expressType = timeToExpressType[selectedTime];
         await updateExpressField(user_id, address_id, list_id, expressType);
-        const refreshed = await fetchAddressDetails(addressList, user_id, list_id);
+        const refreshed = await fetchAddressDetails(addressList, userStartAddress, user_id, list_id);
         dispatch(setAddressDetailsList(refreshed));
     };
 
     const handleOrderType = async (address_id: string, user_id: string, list_id: string, type: OrderTypeDisplay) => {
         const typeSelected = displayToEnum[type];
         await updateOrderType(user_id, address_id, list_id, typeSelected);
-        const refreshed = await fetchAddressDetails(addressList, user_id, list_id);
+        const refreshed = await fetchAddressDetails(addressList, userStartAddress, user_id, list_id);
         dispatch(setAddressDetailsList(refreshed));
     };
 

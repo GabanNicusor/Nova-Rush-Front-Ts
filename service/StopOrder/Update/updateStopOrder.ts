@@ -21,6 +21,7 @@ type UserId = string;
 
 export default async function updateStopOrder(
     oldOrderedList: StopOrderItem[] | [],
+    userStartAddress: AddressItemComplete | undefined,
     allCoords: Coordinate[],
     userId: UserId,
     listId: RouteId,
@@ -54,7 +55,7 @@ export default async function updateStopOrder(
     }
 
     try {
-        await fetchAddressesForSelectedList(listId, dispatch);
+        await fetchAddressesForSelectedList(listId, userStartAddress,  dispatch);
 
         await updateRouteAddressList(addressIdsInOrder, listId);
 

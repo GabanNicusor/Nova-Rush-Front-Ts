@@ -27,6 +27,7 @@ type FetchAddressDetailsResult = CustomAddressDetailsItem[];
 export default async function handleRemoveAddress(
     address_id: AddressId,
     list_id: ListId,
+    userStartAddress: AddressItemComplete | undefined,
     dispatch: AppDispatch,
 ): Promise<void> {
 
@@ -46,7 +47,7 @@ export default async function handleRemoveAddress(
         dispatch(setAddressListOrder(stopOrder));
 
         const addressDetailsList: FetchAddressDetailsResult =
-            await fetchAddressDetails(addressList, user_id, list_id);
+            await fetchAddressDetails(addressList, userStartAddress, user_id, list_id);
         dispatch(setAddressDetailsList(addressDetailsList));
 
         const markers: MarkerItem[] = createMarkers(addressList);

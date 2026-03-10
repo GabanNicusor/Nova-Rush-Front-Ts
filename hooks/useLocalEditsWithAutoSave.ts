@@ -2,11 +2,11 @@ import useCountDownTimer from "@/hooks/useCountDownTimer";
 import {useEffect, useState} from "react";
 import createOrUpdateAddressDetails from "@/service/AddressDetails/Create/createOrUpdateAddressDetails";
 import fetchAddressDetails from "@/service/AddressDetails/Fetch/fetchAddressDetails";
-import {setAddressDetailsList} from "@/state/navSlice";
+import {selectUserStartAddress, setAddressDetailsList} from "@/state/navSlice";
 import {ExpressType} from "@/types/enums/ExpressType";
 import {OrderType} from "@/types/enums/OrderType";
 import {AddressItemComplete} from "@/types/Address/AddressType";
-import {AppDispatch} from '@/state/store';
+import {AppDispatch, useAppSelector} from '@/state/store';
 
 interface LocalEditData {
     user_id: string;
@@ -19,6 +19,8 @@ interface LocalEditData {
 
 export default function useLocalEditsWithAutoSave(addressList: AddressItemComplete[], addressListId: string, dispatch:
     AppDispatch) {
+    const userStartAddress = useAppSelector(selectUserStartAddress);
+
     const {timeLeft, startTimer} = useCountDownTimer(10);
     const [localEdits, setLocalEdits] = useState<Record<string, LocalEditData>>({});
 
@@ -38,7 +40,7 @@ export default function useLocalEditsWithAutoSave(addressList: AddressItemComple
                             )
                         )
                     );
-                    const refreshed = await fetchAddressDetails(addressList, user_id, addressListId);
+                    const refreshed = await fetchAddressDetails(addressList, userStartAddress, user_id, addressListId);
                     dispatch(setAddressDetailsList(refreshed));
                     setLocalEdits({});
                 } catch (err) {

@@ -32,7 +32,7 @@ interface NavState {
     directionSteps: RouteStep[];
     addressListOrder: StopOrderItem[];
     addressDetailsList: CustomAddressDetailsItem[];
-    userStartAddress: AddressItemComplete | null;
+    userStartAddress: AddressItemComplete | undefined;
 
     bottomSheetIndex: number;
     addressDetailsIndexSelected: number;
@@ -64,7 +64,7 @@ const initialState: NavState = {
     addressDetailsIndexSelected: 0,
 
     addressDetailsList: [],
-    userStartAddress: null,
+    userStartAddress: undefined,
     isAddressPressesForDetails: false,
     isNavigatePressed: false,
     codeExpirationTimestamp: 0,
@@ -105,7 +105,7 @@ export const navSlice = createSlice({
         setAddressList: (state, action: PayloadAction<AddressItemComplete[]>) => {
             state.addressList = action.payload;
         },
-        setUserStartAddress: (state, action: PayloadAction<AddressItemComplete>) => {
+        setUserStartAddress: (state, action : PayloadAction<AddressItemComplete | undefined>) => {
             state.userStartAddress = action.payload;
         },
         setBottomSheetIndex: (state, action: PayloadAction<number>) => {

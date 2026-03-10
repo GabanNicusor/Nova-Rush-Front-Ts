@@ -7,7 +7,7 @@ import {
     selectAddressDetailsIndexSelected,
     selectAddressDetailsList,
     selectAddressList,
-    selectAddressListId,
+    selectAddressListId, selectUserStartAddress,
     setAddressDetailsList,
     setIsAddressPressesForDetails,
 } from '@/state/navSlice';
@@ -120,12 +120,14 @@ export default function AddressDetailsBottomSheet() {
     const addressListId = useAppSelector(selectAddressListId);
     const addressDetails = useAppSelector(selectAddressDetailsList);
     const index = useAppSelector(selectAddressDetailsIndexSelected);
+    const userStartAddress = useAppSelector(selectUserStartAddress);
+
 
     const dispatch = useAppDispatch();
 
     const closeBottomSheet = async () => {
         const user_id = await getUserId();
-        dispatch(setAddressDetailsList(await fetchAddressDetails(addressList, user_id, addressListId,)));
+        dispatch(setAddressDetailsList(await fetchAddressDetails(addressList, userStartAddress, user_id, addressListId,)));
         dispatch(setIsAddressPressesForDetails(false));
     };
 

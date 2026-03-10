@@ -19,6 +19,7 @@ import {StopOrderItem} from '@/types/StopOrder/StopOrder';
 
 export default async function fetchAddressesForSelectedList(
     ListId: string,
+    userStartAddress: AddressItemComplete | undefined,
     dispatch: AppDispatch,
 ): Promise<void> {
     try {
@@ -41,11 +42,7 @@ export default async function fetchAddressesForSelectedList(
 
         dispatch(
             setAddressDetailsList(
-                await fetchAddressDetails(
-                    addressFromListAddress,
-                    user_id as string,
-                    ListId,
-                ),
+                await fetchAddressDetails(addressFromListAddress, userStartAddress, user_id as string, ListId),
             ),
         );
         dispatch(setAddressList(addressFromListAddress));

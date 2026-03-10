@@ -5,9 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {ReviewType} from '@/types/enums/ReviewType';
 import {CustomAddressDetailsItem} from '@/types/AddressDetails/CustomAddressDetails';
-import {useAppDispatch} from '@/state/store'
+import {useAppDispatch, useAppSelector} from '@/state/store'
 
 import handleRemoveAddress from '../../utils/handleRemoveAddress';
+import {selectUserStartAddress} from "@/state/navSlice";
 
 interface IStyles {
     card: ViewStyle;
@@ -34,6 +35,8 @@ export default function AddressRatingCard({handleVote, item, addressListId}: Add
 
     const isSelected = (vote: ReviewType): boolean => item.selectedVote === vote;
     const dispatch = useAppDispatch();
+    const userStartAddress = useAppSelector(selectUserStartAddress);
+
     return (
         <View style={styles.card}>
             <Text style={styles.cardTitle}>Is it safe to deliver here?</Text>
@@ -82,7 +85,7 @@ export default function AddressRatingCard({handleVote, item, addressListId}: Add
             <TouchableOpacity
                 style={styles.removeButton}
                 onPress={() =>
-                    handleRemoveAddress(item.address_id, addressListId, dispatch)
+                    handleRemoveAddress(item.address_id, addressListId, userStartAddress, dispatch)
                 }
             >
                 <Text style={styles.removeButtonText}>Remove Stop</Text>

@@ -46,9 +46,6 @@ export default async function postCalculateAndDisplayRoute(
 ): Promise<void> {
 
     if (address.length < 2) {
-        console.warn(
-            'Route requires at least two addresses (origin and destination).',
-        );
         return;
     }
     const origin: LngLatArray = [address[0].longitude, address[0].latitude];

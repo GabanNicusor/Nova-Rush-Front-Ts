@@ -41,7 +41,6 @@ export default async function getShortestRoute(
                 headers: {'Content-Type': 'application/json'},
             },
         );
-
         dispatch(setAddressList(response.data.route));
     } catch (error) {
         handleApiError(error);

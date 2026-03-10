@@ -5,7 +5,12 @@ import {useAppDispatch, useAppSelector} from '@/state/store';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {ScaleDecorator} from 'react-native-draggable-flatlist';
 
-import {selectAddressListId, setAddressDetailsIndexSelected, setIsAddressPressesForDetails} from '@/state/navSlice';
+import {
+    selectAddressListId,
+    selectUserStartAddress,
+    setAddressDetailsIndexSelected,
+    setIsAddressPressesForDetails
+} from '@/state/navSlice';
 
 import handleRemoveAddress from '../../utils/handleRemoveAddress';
 
@@ -37,12 +42,13 @@ interface RenderRouteAddressListProps {
 export default function RenderRouteAddressList({item, index, drag, isActive}: RenderRouteAddressListProps) {
     const dispatch = useAppDispatch();
     const addressListId = useAppSelector(selectAddressListId);
+    const userStartAddress = useAppSelector(selectUserStartAddress);
+
     const isNewStop = useIsNewStop(item.id);
 
     const handleAddressDetails = async (): Promise<void> => {
         if (!addressListId) return;
-        await fetchAddressesForSelectedList(addressListId, dispatch);
-        console.log(index);
+        await fetchAddressesForSelectedList(addressListId, userStartAddress, dispatch);
         dispatch(setIsAddressPressesForDetails(true));
         dispatch(setAddressDetailsIndexSelected(index));
     };
@@ -75,7 +81,7 @@ export default function RenderRouteAddressList({item, index, drag, isActive}: Re
             {index !== 0 && (
                 <TouchableOpacity
                     onPress={() =>
-                        handleRemoveAddress(item.id, addressListId || '', dispatch)
+                        handleRemoveAddress(item.id, addressListId || '', userStartAddress, dispatch)
                     }
                     style={styles.routeItemDeleteButton}
                 >

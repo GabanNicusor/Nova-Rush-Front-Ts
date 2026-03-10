@@ -26,7 +26,9 @@ import {
     selectAddressListOrder,
     selectBottomSheetIndex,
     selectPolylineCoordsList,
-    selectRouteList, selectUserStartAddress,
+    selectRouteList,
+    selectUserLocation,
+    selectUserStartAddress,
     setAddressDetailsList,
     setAddressList,
     setAddressListOrder,
@@ -50,8 +52,12 @@ import useCountDownTimer from '../../hooks/useCountDownTimer';
 import ButtonOptimizeRoute from '../Buttons/ButtonOptimizeRoute';
 import RenderRouteAddressList from './RenderRouteAddressList';
 import {AddressItemComplete} from '@/types/Address/AddressType';
+import RecenterButtonContainer from "@/components/Buttons/RecenterButtonContainer";
+import MapView from "react-native-maps";
 
 interface IStyles {
+    handleWrapper: ViewStyle;
+    indicator: ViewStyle;
     container: ViewStyle;
     flexOne: ViewStyle;
     searchContainer: ViewStyle;
@@ -77,16 +83,20 @@ interface AddressSuggestion {
     address?: string;
 }
 
-export function AddressSearchBottomSheet() {
+interface Props {
+    mapRef: React.RefObject<MapView | null>;
+}
+export function AddressSearchBottomSheet({mapRef}: Props) {
     const dispatch = useAppDispatch();
 
     const addressListId = useAppSelector(selectAddressListId);
-    const startItem = useAppSelector(selectUserStartAddress);
+    const userStartAddress = useAppSelector(selectUserStartAddress);
     const oldOrderedList = useAppSelector(selectAddressListOrder);
     const addressList = useAppSelector(selectAddressList);
     const routeList = useAppSelector(selectRouteList);
     const allCords = useAppSelector(selectPolylineCoordsList);
     const bottomSheetIndex = useAppSelector(selectBottomSheetIndex);
+    const userLocation = useAppSelector(selectUserLocation);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -136,6 +146,7 @@ export function AddressSearchBottomSheet() {
 
         await updateStopOrder(
             oldOrderedList,
+            userStartAddress,
             allCords,
             userId,
             listId,
@@ -169,6 +180,7 @@ export function AddressSearchBottomSheet() {
                 await getShortestRoute(addressListId, dispatch);
                 await updateStopOrder(
                     oldOrderedList,
+                    userStartAddress,
                     allCords,
                     user_id,
                     addressListId,
@@ -202,6 +214,15 @@ export function AddressSearchBottomSheet() {
         );
     };
 
+    const customTopBottomSheet = () => {
+        return (
+            <View style={styles.handleWrapper}>
+                <View style={styles.indicator}/>
+                <RecenterButtonContainer mapRef={mapRef} bottomSheetIndex={bottomSheetIndex} location={userLocation}/>
+            </View>
+        );
+    };
+
     useEffect(() => {
         if (bottomSheetRef.current) {
             bottomSheetRef.current.snapToIndex(safeIndex);
@@ -213,11 +234,12 @@ export function AddressSearchBottomSheet() {
             ref={bottomSheetRef}
             snapPoints={snapPoints}
             index={safeIndex}
+            handleComponent={customTopBottomSheet}
+            enableDynamicSizing={false}
             enableContentPanningGesture={false}
             onChange={index => dispatch(setBottomSheetIndex(index))}
         >
-
-            <BottomSheetView style={styles.container}>
+            <View style={styles.container}>
                 <TouchableWithoutFeedback onPress={dismissKeyboard}>
                     <View style={styles.flexOne}>
                         <View style={styles.searchContainer}>
@@ -265,9 +287,9 @@ export function AddressSearchBottomSheet() {
 
                                     // This renders the first address at the top, but makes it "untouchable" by drag logic
                                     ListHeaderComponent={() => (
-                                        startItem ? (
+                                        userStartAddress ? (
                                             <RenderRouteAddressList
-                                                item={startItem}
+                                                item={userStartAddress}
                                                 index={0}
                                                 drag={undefined}
                                                 isActive={false}
@@ -276,28 +298,25 @@ export function AddressSearchBottomSheet() {
                                     )}
 
                                     onDragEnd={async ({data, to}) => {
-                                        if(startItem == null) return;
-
-                                        const updatedFullList = [startItem, ...data];
 
                                         try {
                                             const user_id = await getUserId();
                                             if (addressListId) {
                                                 await updateStopOrder(
                                                     oldOrderedList,
+                                                    userStartAddress,
                                                     allCords,
                                                     user_id,
                                                     addressListId,
-                                                    updatedFullList,
+                                                    data,
                                                     dispatch,
                                                 );
 
                                                 await updateNewStop(addressListId, data[to].id);
 
-                                                const details = await fetchAddressDetails(updatedFullList, user_id, addressListId);
-
+                                                const details = await fetchAddressDetails(data, userStartAddress, user_id, addressListId);
                                                 dispatch(setAddressDetailsList(details));
-                                                dispatch(setAddressList(updatedFullList));
+                                                dispatch(setAddressList(data));
 
                                                 const newOrder = await getStopOrder(addressListId);
                                                 dispatch(setAddressListOrder(newOrder ?? []));
@@ -313,7 +332,7 @@ export function AddressSearchBottomSheet() {
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
-            </BottomSheetView>
+            </View>
 
             <Modal
                 transparent={true}
@@ -351,6 +370,29 @@ export function AddressSearchBottomSheet() {
 }
 
 const styles = StyleSheet.create<IStyles>({
+    handleWrapper: {
+        width: '100%',
+        paddingTop: 10,
+        paddingBottom: 15,
+        backgroundColor: 'white',
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+    },
+    indicator: {
+        top: 20,
+        width: 40,
+        height: 4,
+        backgroundColor: 'black',
+        borderRadius: 2,
+        alignSelf: 'center',
+        marginBottom: 10,
+    },
+
     container: {
         flex: 1,
         padding: 20,

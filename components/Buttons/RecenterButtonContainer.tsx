@@ -1,41 +1,45 @@
 import React from 'react';
-import {Animated} from 'react-native';
-
-import {setDestination} from '@/state/navSlice';
-import {useAppDispatch} from '@/state/store';
+import {Animated, useWindowDimensions} from 'react-native';
 
 import RecenterButton from './RecenterButton';
-import useConvertPercentageToNumber from '../../utils/convertPersentageToNumber';
+import MapView from "react-native-maps";
 
 interface UserLocation {
     latitude: number;
-    longitude: number;
-    accuracy: boolean;
-
-    [key: string]: any;
+    longitude: number
+    speed?: number;
+    heading?: number;
+    accuracy?: number;
 }
 
 interface RecenterButtonContainerProps {
+    mapRef: React.RefObject<MapView | null>;
     //** Represents the index of each value from snapPoints, that display bottom sheet at selected position*/
     bottomSheetIndex: number;
     location: UserLocation | null;
 }
 
 export default function RecenterButtonContainer({
+                                                    mapRef,
                                                     bottomSheetIndex,
                                                     location
                                                 }: RecenterButtonContainerProps) {
-    const dispatch = useAppDispatch();
+    const {height} = useWindowDimensions();
 
-    const position = useConvertPercentageToNumber(bottomSheetIndex);
+    const position = 0.03 * height;
 
     const recenterMapViewLocation = (): void => {
-        if (location) {
-            dispatch(setDestination(location));
-        }
+        if (!location || !mapRef?.current) return;
+
+        mapRef.current.animateToRegion({
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.010,
+            longitudeDelta: 0.010,
+        }, 1000);
     };
 
-    if (bottomSheetIndex <= 2 && position !== undefined) {
+    if (bottomSheetIndex < 3 && position !== undefined) {
         return (
             <RecenterButton
                 onPress={recenterMapViewLocation}

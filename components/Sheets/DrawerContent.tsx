@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 
 import {
-    selectRouteList,
+    selectRouteList, selectUserStartAddress,
     setAddressDetailsList,
     setAddressList,
     setAddressListId,
@@ -48,6 +48,7 @@ interface FormattedRoute {
 export default function DrawerContent({navigation}: DrawerContentComponentProps) {
     const dispatch = useAppDispatch()
     const routeList = useAppSelector(selectRouteList);
+    const userStartAddress = useAppSelector(selectUserStartAddress);
     const [routeListDataConvertor, setAddressListDataConvertor] = useState<
         FormattedRoute[]
     >([]);
@@ -56,13 +57,13 @@ export default function DrawerContent({navigation}: DrawerContentComponentProps)
         async (listId: string) => {
 
             try {
-                await fetchAddressesForSelectedList(listId, dispatch);
+                await fetchAddressesForSelectedList(listId, userStartAddress, dispatch);
                 navigation.closeDrawer();
             } catch (error) {
                 console.error('Error fetching addresses:', error);
             }
         },
-        [dispatch, navigation],
+        [dispatch, navigation, userStartAddress],
     );
 
     const handleRemoveList = useCallback(

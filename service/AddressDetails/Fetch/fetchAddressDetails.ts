@@ -19,13 +19,18 @@ export type FinalAddressDetailsList = CustomAddressDetailsItem[];
 
 export default async function fetchAddressDetails(
     addressList: AddressItemComplete[],
+    userStartAddress: AddressItemComplete | undefined,
     userId: string,
     list_id: string,
 ): Promise<FinalAddressDetailsList> {
 
+    const add: AddressItemComplete[] = userStartAddress
+        ? [userStartAddress, ...(addressList ?? [])]
+        : (addressList ?? []);
+
     const addressDetailsList: CustomAddressDetailsItem[] = [];
 
-    for (const address of addressList) {
+    for (const address of add) {
         try {
             const addressDetail: AddressDetailsItemComplete | undefined = await getAddressDetails(userId, address.id);
             let ratingAddress: RatingAddressItemComplete | undefined = await getRatingAddress(address.id);
