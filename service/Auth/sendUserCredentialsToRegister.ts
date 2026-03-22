@@ -42,7 +42,7 @@ export default async function sendUserCredentialsToRegister(
         policies: ['default'],
         // NOTE: The 'token' value looks like a hardcoded security measure.
         // Ensure this is intentional and correctly handled by your backend.
-        token: 'hvs.Q8QhkxxaAObSgvQSfOb27cag',
+        token: '',
     };
 
     try {
