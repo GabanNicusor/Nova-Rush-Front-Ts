@@ -16,7 +16,6 @@ import handleRemoveAddress from '../../utils/handleRemoveAddress';
 
 import {useIsNewStop} from "@/hooks/useIsNewStop"
 import {AddressItemComplete} from '@/types/Address/AddressType'
-import fetchAddressesForSelectedList from "../../service/Address/Fetch/fetchAddressesForSelectedList";
 
 interface IStyles {
     routeItemCard: ViewStyle;

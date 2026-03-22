@@ -1,4 +1,4 @@
-import {setAddressDetailsList, setAddressList, setAddressListOrder, setDestination,} from '@/state/navSlice';
+import {setAddressDetailsList, setAddressList, setAddressListOrder,} from '@/state/navSlice';
 
 import {AppDispatch} from "@/state/store"
 import {AddressItemComplete} from '@/types/Address/AddressType';

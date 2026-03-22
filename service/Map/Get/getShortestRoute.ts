@@ -4,7 +4,6 @@ import {handleApiError} from '@/utils/apiErrorHandler';
 import dispatchFirstListId from '../../../utils/User/dispatchFirstListId';
 
 import {AppDispatch} from '@/state/store';
-import {setAddressList} from '@/state/navSlice';
 
 import getUserAddressStart from '../../Address/Get/getUserAddressStart';
 import getUserId from '../../User/Get/getUserId';
