@@ -4,7 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="20bbbaf1-d994-43ef-9dc7-a1f31735e048" name="Changes" comment="I changed getAddressStartId to getUserAddressStart that returns an AddressItemComplete, and i updated all the sections needed, also i repaired RecenterButtonContainer also SearchBottomSheet now we can scroll" />
+    <list default="true" id="20bbbaf1-d994-43ef-9dc7-a1f31735e048" name="Changes" comment="I changed getAddressStartId to getUserAddressStart that returns an AddressItemComplete, and i updated all the sections needed, also i repaired RecenterButtonContainer also SearchBottomSheet now we can scroll">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Buttons/RecenterButtonContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Buttons/RecenterButtonContainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Cards/AddressRatingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Cards/AddressRatingCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Map/RoutePolyline.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Map/RoutePolyline.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Map/SearchedAddressMarker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Map/SearchedAddressMarker.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressDetailsBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressDetailsBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressNavigationBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressNavigationBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/AddressSearchBottomSheet.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/AddressSearchBottomSheet.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/DrawerContent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/DrawerContent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Sheets/RenderRouteAddressList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Sheets/RenderRouteAddressList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useRoutePolyline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useRoutePolyline.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/EmailVerificationScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/EmailVerificationScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/MapScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/MapScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/StartAddressScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/screens/StartAddressScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Address/Fetch/fetchAddressesForSelectedList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Address/Fetch/fetchAddressesForSelectedList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Map/Get/getShortestRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Map/Get/getShortestRoute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/Map/Post/postCalculateAndDisplayRoute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/Map/Post/postCalculateAndDisplayRoute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Delete/deleteAddressFromRouteStop.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Delete/deleteAddressFromRouteStop.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/StopOrder/Update/updateStopOrder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/service/StopOrder/Update/updateStopOrder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/state/navSlice.ts" beforeDir="false" afterPath="$PROJECT_DIR$/state/navSlice.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/handleRemoveAddress.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/utils/handleRemoveAddress.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,6 +44,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
@@ -66,7 +94,15 @@
       <workItem from="1772466438594" duration="29746000" />
       <workItem from="1772733116650" duration="17368000" />
       <workItem from="1772910158070" duration="17987000" />
-      <workItem from="1773152412087" duration="4362000" />
+      <workItem from="1773152412087" duration="8468000" />
+      <workItem from="1773163016694" duration="43000" />
+      <workItem from="1773163069947" duration="31000" />
+      <workItem from="1773163109334" duration="36243000" />
+      <workItem from="1773488976521" duration="50946000" />
+      <workItem from="1774075452661" duration="143000" />
+      <workItem from="1774075676485" duration="21000" />
+      <workItem from="1774075701621" duration="49000" />
+      <workItem from="1774171919527" duration="800000" />
     </task>
     <task id="LOCAL-00001" summary="we organized the code, delete useless comments, add comments to functions {rare cases}, and we create hooks for some functions, also the component was re-write from const  to function()">
       <option name="closed" value="true" />
@@ -140,7 +176,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773156780899</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="I changed getAddressStartId to getUserAddressStart that returns an AddressItemComplete, and i updated all the sections needed, also i repaired RecenterButtonContainer also SearchBottomSheet now we can scroll">
+      <option name="closed" value="true" />
+      <created>1773156928961</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1773156928961</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

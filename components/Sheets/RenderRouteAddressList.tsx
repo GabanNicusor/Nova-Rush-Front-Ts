@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {useAppDispatch, useAppSelector} from '@/state/store';
 
@@ -39,16 +39,15 @@ interface RenderRouteAddressListProps {
 }
 
 
-export default function RenderRouteAddressList({item, index, drag, isActive}: RenderRouteAddressListProps) {
+function RenderRouteAddressList({item, index, drag, isActive}: RenderRouteAddressListProps) {
     const dispatch = useAppDispatch();
     const addressListId = useAppSelector(selectAddressListId);
     const userStartAddress = useAppSelector(selectUserStartAddress);
 
-    const isNewStop = useIsNewStop(item.id);
+    const isNewStop = useIsNewStop(item?.id);
 
     const handleAddressDetails = async (): Promise<void> => {
-        if (!addressListId) return;
-        await fetchAddressesForSelectedList(addressListId, userStartAddress, dispatch);
+        if (!addressListId || index < 0) return;
         dispatch(setIsAddressPressesForDetails(true));
         dispatch(setAddressDetailsIndexSelected(index));
     };
@@ -80,8 +79,8 @@ export default function RenderRouteAddressList({item, index, drag, isActive}: Re
 
             {index !== 0 && (
                 <TouchableOpacity
-                    onPress={() =>
-                        handleRemoveAddress(item.id, addressListId || '', userStartAddress, dispatch)
+                    onPress={async () =>
+                      await  handleRemoveAddress(item.id, addressListId, userStartAddress, dispatch)
                     }
                     style={styles.routeItemDeleteButton}
                 >
@@ -96,7 +95,7 @@ export default function RenderRouteAddressList({item, index, drag, isActive}: Re
     }
 
     return <ScaleDecorator>{content}</ScaleDecorator>;
-};
+}
 
 const styles = StyleSheet.create<IStyles>({
     routeItemCard: {
@@ -164,3 +163,5 @@ const styles = StyleSheet.create<IStyles>({
         borderStyle: 'dashed',
     },
 });
+
+export default memo(RenderRouteAddressList);

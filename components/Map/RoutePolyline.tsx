@@ -8,7 +8,6 @@ interface AddressItemProp {
 }
 
 export default function RoutePolyline({address}: AddressItemProp) {
-
     const {routeCoordinates} = useRoutePolyline(address);
 
     if (routeCoordinates.length === 0)  return null;
@@ -20,8 +19,9 @@ export default function RoutePolyline({address}: AddressItemProp) {
                     coordinates={routeCoordinates}
                     strokeColor="#0050FF" // Red
                     strokeWidth={6}
+                    tappable={false}
                 />
             )}
         </>
     );
-};
+}

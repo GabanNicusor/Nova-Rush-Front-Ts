@@ -22,10 +22,7 @@ export default async function deleteAddressFromRouteStop(
         if (response.status === 200) {
             return response.ok;
         }
-
-        console.warn(
-            `Failed to delete address from stop order. Status: ${response.status}`,
-        );
+        
         return undefined;
     } catch (error) {
         console.error('deleteAddressFromRouteStop error:', error);

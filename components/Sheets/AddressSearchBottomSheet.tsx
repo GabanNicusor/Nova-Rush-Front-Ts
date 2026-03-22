@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import DraggableFlatList, {RenderItemParams,} from 'react-native-draggable-flatlist';
 
@@ -29,7 +29,6 @@ import {
     selectRouteList,
     selectUserLocation,
     selectUserStartAddress,
-    setAddressDetailsList,
     setAddressList,
     setAddressListOrder,
     setBottomSheetIndex,
@@ -42,10 +41,8 @@ import findAddressSuggestion from '../../service/Address/Fetch/findAddressSugges
 import getShortestRoute from '../../service/Map/Get/getShortestRoute';
 import getUserId from '../../service/User/Get/getUserId';
 import updateStopOrder from '../../service/StopOrder/Update/updateStopOrder';
-import updateNewStop from '../../service/StopOrder/Update/updateNewStop';
 import getStopOrder from '../../service/StopOrder/Get/getStopOrder';
 import updateAllNewStops from '../../service/StopOrder/Update/updateAllNewStops';
-import fetchAddressDetails from '../../service/AddressDetails/Fetch/fetchAddressDetails';
 
 import useCountDownTimer from '../../hooks/useCountDownTimer';
 
@@ -54,6 +51,7 @@ import RenderRouteAddressList from './RenderRouteAddressList';
 import {AddressItemComplete} from '@/types/Address/AddressType';
 import RecenterButtonContainer from "@/components/Buttons/RecenterButtonContainer";
 import MapView from "react-native-maps";
+import updateNewStop from "@/service/StopOrder/Update/updateNewStop";
 
 interface IStyles {
     handleWrapper: ViewStyle;
@@ -64,7 +62,9 @@ interface IStyles {
     searchInput: TextStyle;
     menuButton: ViewStyle;
     suggestionsContainer: ViewStyle;
-    suggestionItem: ViewStyle;
+    resultCard: ViewStyle;
+    iconWrapper: ViewStyle;
+    resultText: TextStyle;
     emptyContainerFull: ViewStyle;
     emptyContainer: ViewStyle;
     emptyText: TextStyle;
@@ -86,19 +86,21 @@ interface AddressSuggestion {
 interface Props {
     mapRef: React.RefObject<MapView | null>;
 }
+
 export function AddressSearchBottomSheet({mapRef}: Props) {
     const dispatch = useAppDispatch();
 
     const addressListId = useAppSelector(selectAddressListId);
+    const addressList = useAppSelector(selectAddressList);
     const userStartAddress = useAppSelector(selectUserStartAddress);
     const oldOrderedList = useAppSelector(selectAddressListOrder);
-    const addressList = useAppSelector(selectAddressList);
     const routeList = useAppSelector(selectRouteList);
     const allCords = useAppSelector(selectPolylineCoordsList);
     const bottomSheetIndex = useAppSelector(selectBottomSheetIndex);
     const userLocation = useAppSelector(selectUserLocation);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
+    const [addressListLocal, setAddressListLocal] = useState(addressList);
 
     const snapPoints = useMemo(() => ['15%', '40%', '60%', '90%'], []);
 
@@ -113,7 +115,6 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
     const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(false);
 
     const {timeLeft, startTimer} = useCountDownTimer(10);
-
 
     const handleInputChange = async (text: string) => {
         setQuery(text);
@@ -151,19 +152,27 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
             userId,
             listId,
             addresses,
-            dispatch,
+            true,
+            dispatch
         );
 
-        dispatch(setAddressList(addresses));
-        dispatch(setDestination({latitude: item.latitude ?? 0.50, longitude: item.longitude ?? 0.50}));
         const newOrder = await getStopOrder(listId);
         dispatch(setAddressListOrder(newOrder ?? []));
+
+        dispatch(setAddressList(addresses));
+        dispatch(setDestination(
+            {
+                id: item.id, createdAt: "now",
+                latitude: item.latitude ?? item.coordinates?.[1] ?? 0,
+                longitude: item.longitude ?? item.coordinates?.[0] ?? 0,
+                address_complete: item.address_complete || item.address || ''
+            }
+        ));
 
         setSuggestions([]);
         setQuery('');
         setIsSearchActive(false);
     };
-
 
     const dismissKeyboard = () => {
         if (isTappingSuggestion) return;
@@ -177,42 +186,43 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
         if (timeLeft === 0 && addressListId) {
             startTimer();
             try {
-                await getShortestRoute(addressListId, dispatch);
+                const updatedAddressOrder = await getShortestRoute(addressListId, true, dispatch);
                 await updateStopOrder(
                     oldOrderedList,
                     userStartAddress,
                     allCords,
                     user_id,
                     addressListId,
-                    addressList,
+                    updatedAddressOrder,
+                    false,
                     dispatch,
                 );
                 await updateAllNewStops(addressListId);
                 const newOrder = await getStopOrder(addressListId);
-                dispatch(setAddressListOrder(newOrder));
+
+                dispatch(setAddressListOrder(newOrder ?? []));
+
             } catch (error) {
                 console.error('Route optimization failed:', error);
             }
         }
     };
 
-    const renderItem = ({
-                            item,
-                            drag,
-                            isActive,
-                            getIndex,
-                        }: RenderItemParams<AddressItemComplete>) => {
-        const listIndex = (getIndex() ?? 0) + 1;
-
+    const renderItem = useCallback(({
+                                        item,
+                                        drag,
+                                        isActive,
+                                        getIndex,
+                                    }: RenderItemParams<AddressItemComplete>) => {
         return (
             <RenderRouteAddressList
                 item={item}
-                index={listIndex}
+                index={(getIndex() ?? 0) + 1}
                 drag={drag}
                 isActive={isActive}
             />
         );
-    };
+    }, []); // Empty dependency array ensures the function reference never changes
 
     const customTopBottomSheet = () => {
         return (
@@ -229,6 +239,10 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
         }
     }, [bottomSheetIndex, safeIndex]);
 
+    useEffect(() => {
+        setAddressListLocal(addressList);
+    }, [addressList]);
+
     return (
         <BottomSheet
             ref={bottomSheetRef}
@@ -238,23 +252,40 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
             enableDynamicSizing={false}
             enableContentPanningGesture={false}
             onChange={index => dispatch(setBottomSheetIndex(index))}
+            backgroundStyle={{backgroundColor: '#F7F9FC'}}
         >
             <View style={styles.container}>
                 <TouchableWithoutFeedback onPress={dismissKeyboard}>
                     <View style={styles.flexOne}>
                         <View style={styles.searchContainer}>
-                            <TextInput
-                                style={styles.searchInput}
-                                placeholder="Search"
-                                value={query}
-                                onChangeText={handleInputChange}
-                                onFocus={() => setIsSearchActive(true)}
-                            />
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                backgroundColor: '#FFF',
+                                borderRadius: 15,
+                                paddingHorizontal: 12,
+                                elevation: 3,
+                                shadowColor: '#000',
+                                shadowOffset: {width: 0, height: 2},
+                                shadowOpacity: 0.05,
+                                shadowRadius: 10
+                            }}>
+                                <FontAwesome name="search" size={16} color="#999"/>
+                                <TextInput
+                                    style={styles.searchInput}
+                                    placeholder="Search address..."
+                                    placeholderTextColor="#999"
+                                    value={query}
+                                    onChangeText={handleInputChange}
+                                    onFocus={() => setIsSearchActive(true)}
+                                />
+                            </View>
                             <TouchableOpacity
                                 style={styles.menuButton}
                                 onPress={() => setIsOptionsVisible(true)}
                             >
-                                <FontAwesome name="ellipsis-v" size={20} color="#333"/>
+                                <FontAwesome name="ellipsis-v" size={18} color="#007AFF"/>
                             </TouchableOpacity>
                         </View>
 
@@ -263,29 +294,32 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
                                 {suggestions.map(item => (
                                     <TouchableOpacity
                                         key={item.id}
+                                        style={styles.resultCard}
                                         onPressIn={() => setIsTappingSuggestion(true)}
                                         onPressOut={() => setIsTappingSuggestion(false)}
                                         onPress={() => handlePlaceSelectedAction(item)}
-                                        style={styles.suggestionItem}
                                     >
-                                        <Text>{item.address_complete || item.address}</Text>
+                                        <View style={styles.iconWrapper}>
+                                            <Text style={{fontSize: 14}}>📍</Text>
+                                        </View>
+                                        <Text style={styles.resultText} numberOfLines={2}>
+                                            {item.address_complete || item.address}
+                                        </Text>
                                     </TouchableOpacity>
                                 ))}
                             </View>
                         )}
 
                         <View style={styles.listContainer}>
-                            {addressList.length === 0 ? (
+                            {addressListLocal.length === 0 ? (
                                 <View style={styles.emptyContainerFull}>
                                     <Text style={styles.emptyText}>No addresses added yet.</Text>
                                 </View>
                             ) : (
                                 <DraggableFlatList
-                                    data={addressList}
+                                    data={addressListLocal}
                                     keyExtractor={(item) => item.id}
                                     renderItem={renderItem}
-
-                                    // This renders the first address at the top, but makes it "untouchable" by drag logic
                                     ListHeaderComponent={() => (
                                         userStartAddress ? (
                                             <RenderRouteAddressList
@@ -296,12 +330,17 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
                                             />
                                         ) : null
                                     )}
-
                                     onDragEnd={async ({data, to}) => {
+                                        // 1. Update local UI INSTANTLY (No await)
+                                        setAddressListLocal(data);
 
-                                        try {
-                                            const user_id = await getUserId();
-                                            if (addressListId) {
+                                        // 2. Wrap heavy sync logic to avoid blocking the UI thread
+                                        requestAnimationFrame(async () => {
+                                            try {
+                                                const user_id = await getUserId();
+                                                if (!addressListId) return;
+
+                                                // 3. Perform the heavy lifting
                                                 await updateStopOrder(
                                                     oldOrderedList,
                                                     userStartAddress,
@@ -309,24 +348,26 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
                                                     user_id,
                                                     addressListId,
                                                     data,
+                                                    true,
                                                     dispatch,
                                                 );
 
                                                 await updateNewStop(addressListId, data[to].id);
 
-                                                const details = await fetchAddressDetails(data, userStartAddress, user_id, addressListId);
-                                                dispatch(setAddressDetailsList(details));
-                                                dispatch(setAddressList(data));
-
                                                 const newOrder = await getStopOrder(addressListId);
                                                 dispatch(setAddressListOrder(newOrder ?? []));
+                                                // 4. Update Redux only after the heavy logic is done
+                                                dispatch(setAddressList(data));
+
+                                            } catch (err) {
+                                                console.error('Sync failed:', err);
+                                                // Revert if something goes wrong
+                                                setAddressListLocal(addressList);
                                             }
-                                        } catch (err) {
-                                            console.error('UpdateStopOrder error:', err);
-                                        }
+                                        });
                                     }}
                                     containerStyle={{flex: 1}}
-                                    contentContainerStyle={{paddingBottom: 150}}
+                                    contentContainerStyle={{paddingBottom: 550}}
                                 />
                             )}
                         </View>
@@ -372,124 +413,121 @@ export function AddressSearchBottomSheet({mapRef}: Props) {
 const styles = StyleSheet.create<IStyles>({
     handleWrapper: {
         width: '100%',
-        paddingTop: 10,
-        paddingBottom: 15,
-        backgroundColor: 'white',
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
+        paddingBottom: 10,
+        backgroundColor: '#F7F9FC',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
     indicator: {
-        top: 20,
-        width: 40,
-        height: 4,
-        backgroundColor: 'black',
-        borderRadius: 2,
+        width: 36,
+        height: 5,
+        backgroundColor: '#E5E5EA',
+        borderRadius: 3,
         alignSelf: 'center',
-        marginBottom: 10,
+        marginTop: 8,
     },
-
     container: {
         flex: 1,
-        padding: 20,
+        paddingHorizontal: 20,
     },
-
     flexOne: {
         flex: 1,
     },
-
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 12,
-        paddingHorizontal: 10,
+        marginTop: 5,
+        marginBottom: 15,
     },
-
     searchInput: {
         flex: 1,
-        padding: 8,
-
-        borderBottomWidth: 1,
+        height: 50,
+        paddingLeft: 8,
+        fontSize: 16,
+        color: '#333',
     },
-
     menuButton: {
-        marginLeft: 10,
-        padding: 10,
-
-        borderRadius: 9,
-        borderWidth: 2,
+        marginLeft: 12,
+        width: 44,
+        height: 44,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFF',
+        borderRadius: 12,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
     },
-
     suggestionsContainer: {
-        flexDirection: 'column',
         width: '100%',
+        marginBottom: 10,
     },
-
-    suggestionItem: {
+    resultCard: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFF',
         padding: 15,
-        marginHorizontal: 18,
-        marginVertical: 4,
-
-        borderRadius: 15,
+        borderRadius: 12,
+        marginBottom: 10,
         borderWidth: 1,
-        borderColor: 'black',
-        backgroundColor: '#f9f9f9',
-
-        elevation: 3,
+        borderColor: '#EDF1F7',
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
     },
-
+    iconWrapper: {
+        width: 35,
+        height: 35,
+        borderRadius: 10,
+        backgroundColor: '#F0F4FF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    resultText: {
+        flex: 1,
+        fontSize: 15,
+        color: '#444',
+        lineHeight: 20,
+    },
     emptyContainerFull: {
         flex: 1,
-        minHeight: 500,
+        alignItems: 'center',
         paddingTop: 50,
-        justifyContent: 'flex-start',
     },
-
     emptyContainer: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     emptyText: {
         textAlign: 'center',
-
-        fontSize: 18,
-        color: 'black',
+        fontSize: 16,
+        color: '#6C757D',
     },
-
     listContainer: {
         flex: 1,
-        minHeight: 500,
-        paddingTop: 10,
     },
-
     flatListContent: {
         paddingBottom: 100,
     },
-
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
     },
-
     optionsContainer: {
         width: 200,
         height: 100,
         padding: 15,
         justifyContent: 'center',
         alignItems: 'center',
-
         backgroundColor: 'white',
         borderRadius: 10,
-
         elevation: 5,
     },
 });

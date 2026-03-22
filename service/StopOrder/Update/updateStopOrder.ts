@@ -25,13 +25,12 @@ export default async function updateStopOrder(
     allCoords: Coordinate[],
     userId: UserId,
     listId: RouteId,
-    newOrderedList: AddressItemComplete[],
+    newOrderedList: AddressItemComplete[] | undefined,
+    isAddressListManuallySet: boolean,
     dispatch: AppDispatch,
 ): Promise<void> {
 
     if (
-        !allCoords ||
-        allCoords.length === 0 ||
         !newOrderedList ||
         newOrderedList.length === 0
     ) {
@@ -39,9 +38,13 @@ export default async function updateStopOrder(
         return;
     }
 
-    const encodedPolyline: string = polyline.encode(
-        allCoords.map(({latitude, longitude}) => [latitude, longitude]),
-    );
+    let encodedPolyline: string = '';
+
+    if (allCoords && allCoords.length > 0) {
+        encodedPolyline = polyline.encode(
+            allCoords.map(({ latitude, longitude }) => [latitude, longitude])
+        );
+    }
 
     let addressIdsInOrder: StopOrderItem[];
 
@@ -55,16 +58,18 @@ export default async function updateStopOrder(
     }
 
     try {
-        await fetchAddressesForSelectedList(listId, userStartAddress,  dispatch);
-
         await updateRouteAddressList(addressIdsInOrder, listId);
 
-        await createOrUpdateRoutePath(
-            encodedPolyline,
-            addressIdsInOrder,
-            userId,
-            listId,
-        );
+        await fetchAddressesForSelectedList(listId, userStartAddress, isAddressListManuallySet,  dispatch);
+
+        if (encodedPolyline.length > 0 && addressIdsInOrder.length > 0) {
+            await createOrUpdateRoutePath(
+                encodedPolyline,
+                addressIdsInOrder,
+                userId,
+                listId,
+            );
+        }
     } catch (error) {
         console.error('Error during route stop order update:', error);
     }

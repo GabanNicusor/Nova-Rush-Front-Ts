@@ -26,7 +26,7 @@ export default function RecenterButtonContainer({
                                                 }: RecenterButtonContainerProps) {
     const {height} = useWindowDimensions();
 
-    const position = 0.03 * height;
+    const position = 0.05 * height;
 
     const recenterMapViewLocation = (): void => {
         if (!location || !mapRef?.current) return;

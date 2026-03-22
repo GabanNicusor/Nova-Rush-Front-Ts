@@ -5,7 +5,6 @@ import {
     setAddressList,
     setAddressListId,
     setAddressListOrder,
-    setMarkers,
     setPolylineCoordsList,
 } from '@/state/navSlice';
 import convertCurrentAddressesToStopList from '../../../utils/Map/convertCurrentAddressesToStopList';
@@ -20,6 +19,7 @@ import {StopOrderItem} from '@/types/StopOrder/StopOrder';
 export default async function fetchAddressesForSelectedList(
     ListId: string,
     userStartAddress: AddressItemComplete | undefined,
+    isAddressListManuallySet: boolean,
     dispatch: AppDispatch,
 ): Promise<void> {
     try {
@@ -45,9 +45,11 @@ export default async function fetchAddressesForSelectedList(
                 await fetchAddressDetails(addressFromListAddress, userStartAddress, user_id as string, ListId),
             ),
         );
-        dispatch(setAddressList(addressFromListAddress));
+
+        if (!isAddressListManuallySet) {
+            dispatch(setAddressList(addressFromListAddress));
+        }
         dispatch(setPolylineCoordsList([]));
-        dispatch(setMarkers([]));
         dispatch(setAddressListId(ListId));
     } catch (error) {
         handleApiError(error);

@@ -57,7 +57,7 @@ export default function DrawerContent({navigation}: DrawerContentComponentProps)
         async (listId: string) => {
 
             try {
-                await fetchAddressesForSelectedList(listId, userStartAddress, dispatch);
+                await fetchAddressesForSelectedList(listId, userStartAddress, false, dispatch);
                 navigation.closeDrawer();
             } catch (error) {
                 console.error('Error fetching addresses:', error);

@@ -1,8 +1,7 @@
 import {AppDispatch} from '@/state/store';
-import {setDirectionSteps, setMarkers, setPolylineCoordsList,} from '@/state/navSlice';
+import {setDirectionSteps, setPolylineCoordsList,} from '@/state/navSlice';
 import {handleApiError} from '@/utils/apiErrorHandler';
 
-import createMarkers from '../../../utils/Map/createMarkers';
 import {fetchOSRMDirections} from '../../Direction/fetchOSRMDirection';
 import {AddressItemComplete} from '@/types/Address/AddressType';
 import {ORSMDirectionsType, RouteStep,} from '@/types/OpenRouteService/ORSManeuversType';
@@ -95,7 +94,6 @@ export default async function postCalculateAndDisplayRoute(
         dispatch(setPolylineCoordsList(allCoords));
         dispatch(setDirectionSteps(allSteps));
 
-        dispatch(setMarkers(createMarkers(address)));
     } catch (error) {
         handleApiError(error);
         throw error;

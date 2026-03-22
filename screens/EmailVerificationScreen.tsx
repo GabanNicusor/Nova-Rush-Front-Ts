@@ -35,6 +35,8 @@ export default function EmailVerificationScreen({route}: EmailVerificationProps)
     const {email} = route.params;
 
     const [code, setCode] = useState<string>('');
+    const [requestSend, setRequestSend] = useState<boolean>(false);
+
     const expirationTimestamp = useAppSelector(selectCodeExpirationTimestamp);
     const dispatch = useAppDispatch();
     const navigation = useNavigation<NavigationProp>();
@@ -59,10 +61,12 @@ export default function EmailVerificationScreen({route}: EmailVerificationProps)
             if (response !== undefined && response.status === 200) {
                 dispatch(clearCodeExpiration());
                 navigation.navigate('LoginScreen');
+            } else {
+                Alert.alert('❎ Invalid Code ❎', 'The code is incorrect or has expired. Please request a new code.');
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            Alert.alert('❎ Invalid Code ❎', 'The code is incorrect or has expired. Please try again.');
+            Alert.alert('❎ Invalid Code ❎', 'The code is incorrect or has expired. Please request a new code.');
         }
     };
 
@@ -71,6 +75,7 @@ export default function EmailVerificationScreen({route}: EmailVerificationProps)
             Alert.alert('Please wait', `You can request a new code in ${formatTime(remainingSeconds)}`);
             return;
         }
+        setRequestSend(true);
 
         try {
             const response = await sendNewCodeRequest(email);
@@ -85,6 +90,7 @@ export default function EmailVerificationScreen({route}: EmailVerificationProps)
                 }
 
                 Alert.alert('✅ Success', 'A new verification code has been sent!');
+                setRequestSend(false);
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -138,7 +144,9 @@ export default function EmailVerificationScreen({route}: EmailVerificationProps)
                 disabled={!canRequestNewCode}
             >
                 <Text style={styles.buttonText}>
-                    {canRequestNewCode ? (
+                    {requestSend ? (
+                        'Loading ...'
+                    ) : canRequestNewCode ? (
                         'Request New Code'
                     ) : (
                         <Text style={{color: '#FF4444', fontWeight: '600'}}>

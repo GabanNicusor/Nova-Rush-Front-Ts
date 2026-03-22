@@ -21,18 +21,17 @@ export default function useRoutePolyline(address: AddressItemComplete[]) {
 
     //Optimize route when address changes
     useEffect(() => {
-        const fetchAndCalculateRoute = async () => {
-
+        const timer = setTimeout(async () => {
             if (address.length >= 1) {
                 try {
                     await postCalculateAndDisplayRoute(address, dispatch);
                 } catch (error) {
-                    console.error('Error fetching or calculating route:', error);
+                    console.error('Error:', error);
                 }
             }
-        };
+        }, 1000);
 
-        fetchAndCalculateRoute().then();
+        return () => clearTimeout(timer);
     }, [address, dispatch]);
 
     //Optimize / cut polyline when user moves on the right path

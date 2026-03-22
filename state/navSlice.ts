@@ -21,7 +21,7 @@ type Coordinate = {
 
 
 interface NavState {
-    destination: Coordinate | null;
+    destination: AddressItemComplete | undefined;
     userLocation: UserLocation | null;
 
     addressListId: string;
@@ -42,10 +42,8 @@ interface NavState {
 }
 
 const initialState: NavState = {
-    destination: {
-        latitude: 0,
-        longitude: 0,
-    },
+    destination: undefined,
+
     addressListId: '',
     userLocation: {
         latitude: 0,
@@ -75,7 +73,7 @@ export const navSlice = createSlice({
     name: 'nav',
     initialState,
     reducers: {
-        setDestination: (state, action: PayloadAction<Coordinate>) => {
+        setDestination: (state, action: PayloadAction<AddressItemComplete>) => {
             state.destination = action.payload;
         },
         setUserLocation: (state, action: PayloadAction<UserLocation>) => {
@@ -91,10 +89,6 @@ export const navSlice = createSlice({
         setIsNavigatePressed: (state, action: PayloadAction<boolean>) => {
             state.isNavigatePressed = action.payload;
         },
-        setMarkers: (state, action: PayloadAction<MarkerItem[]>) => {
-            state.markers = action.payload;
-        },
-
         setRouteList: (state, action: PayloadAction<any[]>) => {
             state.routeList = action.payload;
         },
@@ -140,7 +134,6 @@ export const {
     setRouteList,
     setUserLocation,
     setPolylineCoordsList,
-    setMarkers,
     setDirectionSteps,
     setBottomSheetIndex,
     setAddressListOrder,
@@ -160,8 +153,7 @@ export const selectUserLocation = (state: { nav: NavState }) =>
 
 export const selectPolylineCoordsList = (state: { nav: NavState }) =>
     state.nav.polylineCoordsList;
-export const selectMarkers = (state: { nav: NavState }) =>
-    state.nav.markers;
+
 export const selectDirectionSteps = (state: { nav: NavState }) =>
     state.nav.directionSteps;
 export const selectIsNavigatePressed = (state: { nav: NavState }) =>

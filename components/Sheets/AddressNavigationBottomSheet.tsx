@@ -116,7 +116,7 @@ export default function AddressNavigationBottomSheet() {
     const snapPoints = useMemo(() => ['25%', '45%', '55%', '75%', '95%'], []);
 
     const addressList = useAppSelector(selectAddressList);
-    const addressListId = useAppSelector(selectAddressListId) || '';
+    const addressListId = useAppSelector(selectAddressListId);
     const addressDetails = useAppSelector(selectAddressDetailsList);
 
     const dispatch = useAppDispatch();

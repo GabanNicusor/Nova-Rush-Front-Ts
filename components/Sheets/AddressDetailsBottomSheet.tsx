@@ -127,7 +127,7 @@ export default function AddressDetailsBottomSheet() {
 
     const closeBottomSheet = async () => {
         const user_id = await getUserId();
-        dispatch(setAddressDetailsList(await fetchAddressDetails(addressList, userStartAddress, user_id, addressListId,)));
+        dispatch(setAddressDetailsList(await fetchAddressDetails(addressList, userStartAddress, user_id, addressListId)));
         dispatch(setIsAddressPressesForDetails(false));
     };
 

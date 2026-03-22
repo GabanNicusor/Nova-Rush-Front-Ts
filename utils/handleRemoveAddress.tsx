@@ -1,8 +1,7 @@
-import {setAddressDetailsList, setAddressList, setAddressListOrder, setMarkers,} from '@/state/navSlice';
+import {setAddressDetailsList, setAddressList, setAddressListOrder, setDestination,} from '@/state/navSlice';
 
 import {AppDispatch} from "@/state/store"
 import {AddressItemComplete} from '@/types/Address/AddressType';
-import {MarkerItem} from '@/types/Marker/MarkerType';
 import {CustomAddressDetailsItem} from '@/types/AddressDetails/CustomAddressDetails';
 import {StopOrderItem} from "@/types/StopOrder/StopOrder";
 
@@ -13,7 +12,6 @@ import getStopOrder from '../service/StopOrder/Get/getStopOrder';
 
 import fetchAddressDetails from '../service/AddressDetails/Fetch/fetchAddressDetails';
 import getUserId from '../service/User/Get/getUserId';
-import createMarkers from './Map/createMarkers';
 import deleteStopDetails from '../service/StopDetails/Delete/deleteStopDetails';
 
 
@@ -42,16 +40,14 @@ export default async function handleRemoveAddress(
             list_id,
         );
         const stopOrder: StopOrderItem[] | undefined = await getStopOrder(list_id);
-
-        dispatch(setAddressList(addressList));
-        dispatch(setAddressListOrder(stopOrder));
+        dispatch(setAddressList(addressList ?? []));
+        dispatch(setAddressListOrder(stopOrder ?? []));
 
         const addressDetailsList: FetchAddressDetailsResult =
             await fetchAddressDetails(addressList, userStartAddress, user_id, list_id);
-        dispatch(setAddressDetailsList(addressDetailsList));
 
-        const markers: MarkerItem[] = createMarkers(addressList);
-        dispatch(setMarkers(markers));
+        dispatch(setAddressDetailsList(addressDetailsList ?? []));
+
     } catch (error) {
         console.error("Failed to update address list:", error);
     }

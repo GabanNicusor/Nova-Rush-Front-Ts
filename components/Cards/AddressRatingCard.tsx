@@ -84,8 +84,8 @@ export default function AddressRatingCard({handleVote, item, addressListId}: Add
 
             <TouchableOpacity
                 style={styles.removeButton}
-                onPress={() =>
-                    handleRemoveAddress(item.address_id, addressListId, userStartAddress, dispatch)
+                onPress={async () =>
+                    await handleRemoveAddress(item.address_id, addressListId, userStartAddress, dispatch)
                 }
             >
                 <Text style={styles.removeButtonText}>Remove Stop</Text>

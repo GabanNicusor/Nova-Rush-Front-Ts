@@ -22,8 +22,9 @@ interface ShortestRouteResponse {
 
 export default async function getShortestRoute(
     addressListId: ListId | null,
+    isOptimizeAgainPressed: boolean,
     dispatch: AppDispatch,
-): Promise<void> {
+): Promise<AddressItemComplete[] | undefined> {
 
     try {
         const first_list_id: string = await fetchFirstListId();
@@ -36,12 +37,13 @@ export default async function getShortestRoute(
         const listIdToUse: string | null =
             addressListId === null ? first_list_id : addressListId;
         const response: AxiosResponse<ShortestRouteResponse> = await axios.get(
-            `${API_BASE_URL}/api/v1/route/shortest?list_id=${listIdToUse}&start_address_id=${startAddress?.id}&user_id=${user_id}`,
+            `${API_BASE_URL}/api/v1/route/shortest?list_id=${listIdToUse}&start_address_id=${startAddress?.id}&user_id=${user_id}&isOptimizeAgainPressed=${isOptimizeAgainPressed}`,
             {
                 headers: {'Content-Type': 'application/json'},
             },
         );
-        dispatch(setAddressList(response.data.route));
+
+        return response.data.route.filter((item: AddressItemComplete) => item.id !== startAddress?.id);
     } catch (error) {
         handleApiError(error);
         throw error;
