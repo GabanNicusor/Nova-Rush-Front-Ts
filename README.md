@@ -48,3 +48,12 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Feature Login and Register
+ In order to work, you should host a vault server, and the token should be placed here, sendUserCredentialsToRegister in the token variable
+ 
+## Feature Map And Addresses
+You need to have a GOOGLE_MAPS_APIKEY and ORS_API_KEY in .env
+Also, be careful with the server address
+Also, you need to host the map yourself from https://openrouteservice.org/ to get an infinite search for addresses
+
